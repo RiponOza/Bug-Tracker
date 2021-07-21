@@ -1,0 +1,105 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+<style>
+    .main-header {
+    background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px 0px 10px 30px;
+    color: white;
+    font-size: 25px;
+    margin-bottom: 30px;
+    font-weight: 600;
+    width: 100%;
+    height: 90px;
+}
+.main-header h2{
+    font-weight: 600;
+}
+    .content .profile-pic{
+        height: 150px;
+        width: 150px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    }
+    
+    #submit_button{
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 0px;
+    }
+    
+</style>
+<body>
+    <!-- HEADER START-->
+    <header class="main-header">
+        <h3><i class="fa fa-bug" aria-hidden="true"></i> Edit Profile</h3>
+    </header>
+    <!-- HEADER END-->
+    
+	<!-- MAIN CONTENT -->
+    <div class="content container-fluid">
+        <div class="row container-fluid">
+            <div class="col-md-3 col-sm-1"></div>
+            <div class="col-md-6 col-sm-10">
+                <!-- STATUS -->
+                <div id="status_success" th:if="${status_success}" th:text="${status_success}" class="alert alert-success"></div>
+                <div id="status_failure" th:if="${status_failure}" th:text="${status_failure}" class="alert alert-danger"></div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <img class="profile-pic" th:src="${image}" alt="profile pic"/><br>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <form method="POST" th:action="@{/edit-profile}" >
+                        <tr>
+                            <th scope="row">First Name</th>
+                            <td><input class="form-control" type="text" name="fname" th:value="${fname}" required></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">First Name</th>
+                            <td><input class="form-control" type="text" name="lname" th:value="${lname}" required></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email</th>
+                            <td><span th:text="${email}"></span></td>
+                        </tr>
+                    <tr>
+                        <th scope="row">Role</th>
+                        <td><span th:text="${role}"></span></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Phone</th>
+                        <td><span th:text="${phone}"></span></td>
+                    </tr>
+                    <tr><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3 col-sm-1"></div>
+            <br><br>
+            <button id="submit_button" class="btn btn-primary" type="submit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Submit</button>
+        </form>
+        </div>
+    </div>
+
+<br><br><br>    
+</body>
+
+
+</html>

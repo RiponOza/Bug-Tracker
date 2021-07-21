@@ -1,0 +1,285 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>Profile</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet"  th:href="@{public/css/dashboard.css}" />
+</head>
+<style>
+    .btn{
+        border-radius: 0px;
+    }
+    .content .profile-pic{
+        height: 150px;
+        width: 150px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        
+    }
+    .btn-group{
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .btn-group button{
+    margin-right: 10px;
+    border-radius : 0px;
+    }
+    .blur {
+		  -webkit-filter: blur(5px);
+		}
+	a{
+		text-decoration: none;
+	}
+
+    /* POPUP START */
+    .popup .overlay {
+        position:fixed;
+        top:0px;
+        left:0px;
+        width:100vw;
+        height:100vh;
+        background:rgba(0,0,0,0.7);
+        z-index:1;
+        display:none;
+      }
+       
+      .popup .content {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%) scale(0);
+        background:#fff;
+        width:95%;
+        max-width:500px;
+        height:250px;
+        z-index:2;
+        text-align:center;
+        padding:50px 20px 10px 20px;
+        box-sizing:border-box;
+        font-family:"Open Sans",sans-serif;
+      }
+       
+      .popup .close-btn {
+        cursor:pointer;
+        position:absolute;
+        right:20px;
+        top:20px;
+        width:30px;
+        height:30px;
+        background:#222;
+        color:#fff;
+        font-size:25px;
+        font-weight:600;
+        line-height:30px;
+        text-align:center;
+        border-radius:50%;
+      }
+
+      .content button{
+          margin-top: 20px;
+      }
+
+      .content input{
+        font-weight: 400;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+       
+      .popup.active .overlay {
+        display:block;
+      }
+       
+      .popup.active .content {
+        transition:all 300ms ease-in-out;
+        transform:translate(-50%,-50%) scale(1);
+      }
+      /* POPUP END */
+</style>
+<body onload="formatPhone()">
+    <!-- HEADER START-->
+    <header class="main-header">
+        <div class="sidebar-button"><i class="fa fa-bars fa-lg"
+            aria-hidden="true"></i></div>
+        <h3><i class="fa fa-bug" aria-hidden="true"></i> USER PROFILE</h3>
+    </header>
+    <!-- HEADER END-->
+
+    <!-- POPUP -->
+    <div class="popup" id="popup-1">
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup()">×</div>
+            <form method="POST" enctype="multipart/form-data" action="/upload-profile-pic">
+                <div class="file-field input-field">
+                  <div class="btn btn-success">
+                    <span>Image</span>
+                    <input type="file" class="upload" id="imageFile" name="imageFile">
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                  </div>
+                  <button class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
+                </div>
+              </form>
+        </div>
+    </div>
+    <!-- POPUP END -->
+    
+    <!--SIDEBAR-->
+    <div class="sidebar">
+        <header>
+            <img class="profile-pic" th:src="@{${image}}" alt="profile pic"/>
+            <span class="cross"><i class="fa fa-times" aria-hidden="true"></i></span>
+            <div class="user_email_text" th:text="${email}"></div>
+        </header>
+        <ul>
+            <li>
+                <a th:href="@{/}"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+            </li>
+            
+            <li th:if="${role}==admin">
+                <a th:href="@{#}"><i class="fa fa-bars" aria-hidden="true"></i> Create Project</a>
+            </li>
+            
+            <li th:if="${session.role}=='project manager'">
+                <a th:href="@{#}"><i class="fa fa-users" aria-hidden="true"></i> Manage Project Users</a>
+            </li>
+            
+            <li th:if="${role}=='project manager'">
+                <a th:href="@{#}"><i class="fa fa-ticket" aria-hidden="true"></i> Create Ticket</a>
+            </li>
+            
+            <li th:if="${role}==developer OR ${session.role}==tester">
+                <a th:href="@{#}"><i class="fa fa-ticket" aria-hidden="true"></i> My Tickets</a>
+            </li>
+            
+            <li th:if="${role}==developer OR ${session.role}==tester">
+                <a th:href="@{#}"><i class="fa fa-bars" aria-hidden="true"></i> My Projects</a>
+            </li>
+            
+            <li>
+                <a th:href="@{/profile}"><i class="fa fa-user" aria-hidden="true"></i> My Profile</a>
+            </li>
+            <li>
+                <a th:href="@{/logout}"><i class="fa fa-sign-out" aria-hidden="true"></i></i> Logout</a>
+            </li>
+        </ul>
+    </div>
+<!--SIDEBAR ENDING-->
+	<!-- MAIN CONTENT -->
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-sm-1"></div>
+            <div class="col-md-6 col-sm-10">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <img class="profile-pic" th:src="@{${image}}" alt="profile pic"/><br>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">Name</th>
+                        <td th:text="${name}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td th:text="${email}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Role</th>
+                        <td th:text="${role}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Phone</th>
+                        <td id="phone" th:text="${phone}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3 col-sm-1"></div>
+            <br><br>
+            <div class="btn-group" role="group">
+			  <a th:href="@{/edit-profile}">
+			  	<button id="edit_button" class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit Profile</button>
+			  </a>
+			  <a>
+        	  <button id="upload_avatar_btn" onclick="togglePopup()" class="btn btn-warning"><i class="fa fa-upload" aria-hidden="true"></i> Upload Avatar</button><br><br>
+			</a>
+			</div>
+            
+        </div>
+    </div>
+
+<br><br><br>    
+</body>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$(".sidebar-body").hide();
+        $(".sidebar-button").click(
+            function () {
+                $(".sidebar").removeClass("sidebar-disapear");
+                $(".sidebar").addClass("sidebar-appear");
+                $(".content").addClass("blur");
+                $(".main-header").addClass("blur")
+            }
+        );
+
+        $(".cross").click(
+            function () {
+                $(".sidebar").removeClass("sidebar-appear");
+                $(".content").removeClass("blur");
+                $(".main-header").removeClass("blur")
+            }
+        );
+        $(".content").click(
+                function () {
+                    $(".sidebar").removeClass("sidebar-appear");
+                    $(".content").removeClass("blur");
+                    $(".main-header").removeClass("blur")
+                }
+            );
+        
+
+       setTimeout(()=>{
+            $("#status").hide();
+       }, 3000);
+       
+
+    });
+
+    formatPhone = ()=>{
+        let phone = document.getElementById('phone').innerText;
+        document.getElementById('phone').innerHTML = '+' + phone.substr(0,2) + '-' + phone.substr(2);
+    }
+
+    // POPUP FUNCTION
+    function togglePopup() {
+        $('#alert-box').hide();
+        document.getElementById("popup-1").classList.toggle("active");
+    }
+    $(".cross").click(() => {
+            $(".sidebar").removeClass("sidebar-appear");
+            $(".content").show();
+    });
+
+   
+    
+</script>
+
+</html>

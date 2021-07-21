@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>Create Project</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js" integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+
+<style type="text/css">
+    body{
+    background-color:white;
+    }
+    .main-header {
+        background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        color: white;
+        font-size: 25px;
+        margin-bottom: 30px;
+        font-weight: 600;
+        width: 100%;
+        height: 90px;
+    }
+    .main-header h2{
+        font-weight: 600;
+    }
+
+    .form-header{
+        padding: 20px 0px 20px 0px;
+    }
+
+    form{
+        margin: 50px 0px 0px 0px;
+    }
+
+    form .btn{
+        border-radius: 0px;
+        margin-top: 20px;
+    }
+
+    footer{
+        height: 200px;
+    }
+    a{
+        text-decoration: none;
+    }
+    a .btn{
+    	border-radius: 0px;
+    }
+</style>
+
+<body>   
+    <header class="main-header">
+        <h3><i class="fa fa-bug" aria-hidden="true"></i> BUG TRACKER </h3>
+    </header>
+
+   <div class="row container-fluid">
+       <div class="col-md-3 col-sm-1"></div>
+       <div class="col-md-6 col-sm-10">
+            <div class="form-header text-center alert alert-warning">
+                <h4><i class="fa fa-bar-chart" aria-hidden="true"></i> Create Project</h4>
+            </div>
+            
+            <!-- STATUS -->
+			<div id="status_success" th:if="${status_success}" th:text="${status_success}" class="alert alert-success"></div>
+			<div id="status_fail" th:if="${status_fail}" th:text="${status_fail}" class="alert alert-danger"></div>
+            
+           <form method="POST" th:action="@{'/create-project'}" th:object="${project}">
+              <div class="form-group">
+                <label>Project Title</label>
+                <input type="text" name="title" th:value="${project.title}" class="form-control" id="title" placeholder="Enter a project title" autocomplete="off" required>
+              </div>
+
+              <div class="form-group">
+                <label >Project Description</label>
+                <textarea th:value="${project.desc}" class="form-control" id="description" name="desc" rows="3" autocomplete="off" required></textarea>
+              </div>
+              
+              <button type="submit" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Create Project</button>
+            </form>
+            <br>
+            <a th:href="@{/my-projects}">
+                <button class="btn btn-warning text-black"><i class="fa fa-bar-chart" aria-hidden="true"></i> Show My Projects</button>
+            </a>
+       </div>
+       <div class="col-md-3 col-sm-1"></div>
+   </div>
+   <footer>
+       
+   </footer>
+</html>

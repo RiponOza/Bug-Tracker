@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js" integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet"  th:href="@{public/css/dashboard.css}" />
+</head>
+
+<body >    
+    <header class="main-header">
+        <div class="sidebar-button"><i class="fa fa-bars fa-lg"
+            aria-hidden="true"></i></div>
+        <h3><i class="fa fa-bug" aria-hidden="true"></i> BUG TRACKER</h3>
+    </header>
+    
+    <!--SIDEBAR-->
+    <div class="sidebar">
+            <header>
+                <img class="profile-pic" th:src="@{${image}}" alt="profile pic"/>
+                <span class="cross"><i class="fa fa-times" aria-hidden="true"></i></span>
+                <div class="user_email_text" th:text="${email}"></div>
+            </header>
+            <ul>
+                <li>
+                    <a th:href="@{/}"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+                </li>
+                
+                <li th:if="${role}==admin">
+                    <a th:href="@{/create-project}"><i class="fa fa-bars" aria-hidden="true"></i> Create Project</a>
+                </li>
+
+                <li th:if="${role}==admin">
+                  <a th:href="@{/my-projects}"><i class="fa fa-bar-chart" aria-hidden="true"></i> My Projects</a>
+                </li>
+                
+                <li th:if="${role}=='project manager'">
+                    <a th:href="@{/manage-project-user}"><i class="fa fa-users" aria-hidden="true"></i> Manage Project Users</a>
+                </li>
+                
+                <li th:if="${role}=='project manager'">
+                    <a th:href="@{/get-project-pm}"><i class="fa fa-bar-chart" aria-hidden="true"></i> My Project</a>
+                </li>
+                
+                <li th:if="${role}=='project manager'">
+                    <a th:href="@{/create-ticket}"><i class="fa fa-ticket" aria-hidden="true"></i> Create Ticket</a>
+                </li>
+
+                <li th:if="${role}=='project manager'">
+                  <a th:href="@{/show-tickets}"><i class="fa fa-ticket" aria-hidden="true"></i> My Tickets</a>
+                </li>
+                
+                <li th:if="${role}==developer OR ${role}==tester">
+                    <a th:href="@{#}"><i class="fa fa-ticket" aria-hidden="true"></i> My Tickets</a>
+                </li>
+                
+                <li th:if="${role}==developer OR ${role}==tester">
+                    <a th:href="@{#}"><i class="fa fa-bar-chart" aria-hidden="true"></i> My Project</a>
+                </li>
+                
+                <li>
+                    <a th:href="@{/profile}"><i class="fa fa-user" aria-hidden="true"></i> My Profile</a>
+                </li>
+                <li>
+                    <a th:href="@{/logout}"><i class="fa fa-sign-out" aria-hidden="true"></i></i> Logout</a>
+                </li>
+            </ul>
+        </div>
+    <!--SIDEBAR ENDING-->
+    <div class="content container-fluid">
+                <!-- STATUS -->
+                <div th:class="${class}" th:if="${status}" th:text="${status}" id="status"></div>
+                
+                <!-- CHARTS -->
+               <div id="row_1" class="row container-fluid text-center">
+                   <div class="col-md-1 col-sm-0"></div>
+                   <div class="col-md-4 col-sm-12">
+	                    <div class="card">
+                          <div class="chart crart_box">
+                            <canvas id="myChart_1"></canvas>
+                          </div>
+                          <div class="card-body">
+                            <h4>Tickets By Type</h4>
+                          </div>
+                        </div>
+                   </div>
+                   <div class="col-md-6 col-sm-12">
+                        <div class="card">
+                        <div class="chart crart_box">
+                            <canvas id="myChart_2"></canvas>
+                        </div>                          
+                        <div class="card-body">
+                            <h4>Tickets By Priority</h4>
+                          </div>
+                        </div>
+	                    
+
+                   </div>
+                    <div class="col-md-1 col-sm-0"></div>
+               </div>
+            <!-- CHARTS -->
+    </div>
+    <footer>
+    
+    </footer>
+    </body>
+
+
+
+
+    <script>
+    const data_1 = {
+   		  labels: [
+   		    'Bugs',
+   		    'Features',
+   		    'Testing'
+   		  ],
+   		  datasets: [{
+   		    label: 'Tickets By Type',
+   		    data: [60, 30, 10],
+   		    backgroundColor: [
+   		      'rgb(255, 99, 132)',
+   		      'rgb(54, 162, 235)',
+   		      'rgb(255, 205, 86)'
+   		    ],
+   		    hoverOffset: 4
+   		  }]
+   		};
+   
+   const config_1 = {
+  		  type: 'pie',
+  		  data: data_1,
+  		};
+   
+   var myChart_1 = new Chart(
+   	    document.getElementById('myChart_1'),
+   	    config_1
+   	  );
+   
+   //CHART 2
+    const labels = ["None", "Low", "Medium", "High"]
+	const data_2 = {
+	  labels: labels,
+	  datasets: [{
+	    label: 'Tickets By Priority',
+	    data: [65, 59, 80, 81],
+	    backgroundColor: [
+	      'rgba(255, 99, 132)',
+	      'rgba(255, 159, 64)',
+	      'rgba(255, 205, 86)',
+	      'rgba(75, 192, 192)'
+	    ],
+	    borderColor: [
+	      'rgb(255, 99, 132)',
+	      'rgb(255, 159, 64)',
+	      'rgb(255, 205, 86)',
+	      'rgb(75, 192, 192)'
+	    ],
+	    borderWidth: 0
+	  }]
+	};
+	
+	const config_2 = {
+			  type: 'bar',
+			  data: data_2,
+			  options: {
+			    scales: {
+			      y: {
+			        beginAtZero: true
+			      }
+			    }
+			  },
+			};
+   
+   var myChart_2 = new Chart(
+		   document.getElementById('myChart_2'),
+		   config_2
+   );
+         
+         
+    </script>
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$(".sidebar-body").hide();
+        $(".sidebar-button").click(
+            function () {
+                $(".sidebar").removeClass("sidebar-disapear");
+                $(".sidebar").addClass("sidebar-appear");
+                $(".content").addClass("blur");
+                $(".main-header").addClass("blur")
+            }
+        );
+
+        $(".cross").click(
+            function () {
+                $(".sidebar").removeClass("sidebar-appear");
+                $(".content").removeClass("blur");
+                $(".main-header").removeClass("blur")
+            }
+        );
+        $(".content").click(
+                function () {
+                    $(".sidebar").removeClass("sidebar-appear");
+                    $(".content").removeClass("blur");
+                    $(".main-header").removeClass("blur")
+                }
+            );
+        
+
+       setTimeout(()=>{
+            $("#status").hide();
+       }, 3000);
+       
+
+    });
+        
+</script>
+
+</html>
