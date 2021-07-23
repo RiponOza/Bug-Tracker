@@ -24,7 +24,7 @@ public class SessionAuth extends HttpFilter {
 		//System.out.println(request.getRequestURI());
 		try {
 			String url = request.getRequestURI();
-			if(url.contains("/public/") || url.equals("/") || url.equals("/login") || url.equals("/register") || url.equals("/reset-password") || url.equals("/send-otp")) {
+			if( url.contains("/noauth/") || url.contains("/public/") || url.equals("/") || url.equals("/login") || url.equals("/register") || url.equals("/reset-password") || url.equals("/send-otp")) {
 				//super.doFilter(request, response, chain);
 				chain.doFilter(request, response);
 			}

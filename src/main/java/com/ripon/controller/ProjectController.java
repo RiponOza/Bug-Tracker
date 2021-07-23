@@ -101,7 +101,7 @@ public class ProjectController {
 	}
 	
 	
-	
+	// get project of project manager
 	@GetMapping("/get-project-pm")
 	public String getProjectofProjectManager(Model model, HttpSession session) {
 		String managerId = session.getAttribute("userid").toString();
@@ -124,10 +124,35 @@ public class ProjectController {
 		model.addAttribute("createdTime", project.getCreatedTime());
 		model.addAttribute("daysPassed", project.getDaysPassed());
 		model.addAttribute("desc", project.getDesc());
-		//model.addAttribute("projectId", project.getId());
+		model.addAttribute("projectId", project.getId());
+		List<User> userList = projectService.getUsersOfProject(project.getId().toString());
+		model.addAttribute("userList", userList);
+		model.addAttribute("userCount", (userList!=null ? userList.size() : 0 ) );
 		return "get_project_pm";
 	}
 	
+	// adds user to a project using emailid and project id
+	@PostMapping("/add-user-to-project")
+	public String addUserToProject(@RequestParam("email") String userEmail, @RequestParam("projectId") String projectId,
+			Model model, HttpSession session) {
+		User user = userService.getUserByEmail(userEmail);
+		if (user != null && (user.getRole().equals("DV") || user.getRole().equals("TS"))) {
+			String userId = user.getPhone();
+			projectService.addUserToProject(userId, projectId);
+		}
+
+		return "redirect:/get-project-pm";
+
+	}
+		
+	// remove user from project
+	@PostMapping("/remove-user-from-project")
+	public String removeUserFromProject(@RequestParam("userId") String userId, @RequestParam("projectId") String projectId,
+			Model model, HttpSession session) {
+			projectService.removeUserFromProject(userId, projectId);
+		return "redirect:/get-project-pm";
+
+	}
 	
 	
 	
@@ -229,44 +254,23 @@ public class ProjectController {
 	
 	
 	
-	@GetMapping("/manage-project-user")
-	public String addUserToProject(HttpSession session) {
-		if(session.getAttribute("userid")==null) {
-			return "redirect:/login";
-		}
-		User manager = userService.getUser(session.getAttribute("userid").toString());
-		if(manager==null) {
-			return "redirect:/login";
-		}
-		if(!manager.getRole().equals("PM")) {
-			return "redirect:/login";
-		}
-		return "manage_project_user";
-	}
+//	@GetMapping("/manage-project-user")
+//	public String addUserToProject(HttpSession session) {
+//		if(session.getAttribute("userid")==null) {
+//			return "redirect:/login";
+//		}
+//		User manager = userService.getUser(session.getAttribute("userid").toString());
+//		if(manager==null) {
+//			return "redirect:/login";
+//		}
+//		if(!manager.getRole().equals("PM")) {
+//			return "redirect:/login";
+//		}
+//		return "manage_project_user";
+//	}
 	
+ 
 	
-	@PostMapping("/add-user-project")
-	public String addUserToProject(@RequestParam("email") String userEmail, Model model, HttpSession session) {
-		if(session.getAttribute("userid")==null) {
-			return "redirect:/login";
-		}
-		User manager = userService.getUser(session.getAttribute("userid").toString());
-		if(manager==null) {
-			return "redirect:/login";
-		}
-		if(!manager.getRole().equals("PM")) {
-			return "redirect:/login";
-		}
-		User user = userService.getUserByEmail(userEmail);
-		Project project = projectService.getProjectOfManager(session.getAttribute("userid").toString());
-		if(user!=null && project!=null) {
-			String userId = user.getPhone();
-			String projectId = project.getId();
-			projectService.addUserToProject(userId, projectId);
-		}
-		return "manage_project_user";
-		
-	}
 	
 	
 	@PostMapping("/delete-project")

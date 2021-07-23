@@ -14,6 +14,7 @@ import com.ripon.dao.ProjectDao;
 import com.ripon.entity.Project;
 import com.ripon.entity.Ticket;
 import com.ripon.entity.User;
+import com.ripon.rowMapper.UserMapper;
 
 @Service
 public class ProjectService {
@@ -86,16 +87,21 @@ public class ProjectService {
 		return projectDao.isManagerFree(managerId);
 	}
 	
+	// assigns users to a project
 	public boolean addUserToProject(String userId, String projectId) {
 		return projectDao.addUserToProject(userId, projectId);
 	}
 	
+	// remove users from a project
 	public boolean removeUserFromProject(String userId, String projectId) {
 		return projectDao.removeUserFromProject(userId, projectId);
 	}
 	
+	
+	
+	// gives list of users assigned to a project
 	public List<User> getUsersOfProject(String projectId){
-		return null;
+		return projectDao.getUsersOfProject(projectId);
 	}
 	
 

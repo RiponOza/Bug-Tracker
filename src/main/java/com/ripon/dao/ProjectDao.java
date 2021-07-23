@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ripon.entity.Project;
 import com.ripon.entity.User;
+import com.ripon.rowMapper.UserMapper;
 
 @Repository
 public class ProjectDao {
@@ -149,16 +150,33 @@ public class ProjectDao {
 	
 	
 	public boolean addUserToProject(String userId, String projectId) {
-		String sql = "INSERT INTO Project_User (user_id, project_id) VALUES(?, ?);";
-		int rowUpdate = jt.update(sql, userId, projectId);
-		return rowUpdate==1?true:false;
+		try {
+			String sql = "INSERT INTO Project_User (user_id, project_id) VALUES(?, ?);";
+			int rowUpdate = jt.update(sql, userId, projectId);
+			return rowUpdate==1?true:false;
+		}catch (Exception e) {
+			return false;
+		}
 	}
 	
+	// gives list of users assigned to a project
+	public List<User> getUsersOfProject(String projectId){
+		try {
+			String sql = "SELECT id, fname, lname, email, role, image FROM User WHERE id IN (SELECT user_id FROM Project_User WHERE project_id=?) ORDER BY fname;";
+			return jt.query(sql, new UserMapper(), projectId);
+		}catch (Exception e) {
+			return null;
+		}
+	}
 	
 	public boolean removeUserFromProject(String userId, String projectId) {
-		String sql = "DELETE FROM Project_User WHERE user_id=? AND project_id=?;";
-		int rowUpdate = jt.update(sql, userId, projectId);
-		return rowUpdate==1?true:false;
+		try {
+			String sql = "DELETE FROM Project_User WHERE user_id=? AND project_id=?;";
+			int rowUpdate = jt.update(sql, userId, projectId);
+			return rowUpdate==1?true:false;
+		}catch (Exception e) {
+			return false;
+		}
 	}
 	
 //	public List<User> getUsersOfProject(String projectId){

@@ -57,6 +57,9 @@ public class UserService {
 	// validates the user credentials
 	public boolean validateUser(String userid, String password) {
 		String hashedPassword = userDao.getUserPassword(userid);
+		if(hashedPassword==null) {
+			return false;
+		}
 		if(BCrypt.checkpw(password, hashedPassword)) {
 			return true;
 		}else {

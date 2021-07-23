@@ -368,7 +368,7 @@
 	let validateEmail = ()=>{
 		let email = $('#email').val();
 		let host = $('#host').val();
-		let url = 'http://' + host + '/is-email-available?email='+ email;
+		let url = 'http://' + host + '/noauth/is-email-available?email='+ email;
 		fetch(url)
 		.then(response => response.json())
 		.then(data => {

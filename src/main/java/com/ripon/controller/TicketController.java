@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.SessionScope;
 
 import com.ripon.entity.Project;
@@ -159,6 +160,13 @@ public class TicketController {
 		model.addAttribute("ticketList", ticketList);
 		model.addAttribute("ticketCount", ticketList.size());
 		return "show_tickets";
+	}
+	
+	// assign user to a project
+	public String assignUserToProject(@RequestParam("email") String email, @RequestParam("projectId") String projectId) {
+		User user = userService.getUserByEmail(email);
+		ticketService.assignTicketToUser(email);
+		return "get-project-pm";
 	}
 
 }

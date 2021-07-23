@@ -36,7 +36,7 @@ public class Config {
 		ds.setUrl(url);
 		ds.setUsername(user);
 		ds.setPassword(password);
-		ds.setInitialSize(10);
+		ds.setInitialSize(30);
 		//System.out.println("Data Source Bean is created");
 		return ds;
 	}
