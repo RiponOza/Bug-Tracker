@@ -72,7 +72,7 @@ public class LoginController {
 	 * @param session
 	 * @param model
 	 * @return login page with error message if any error occures . Else returns
-	 *         dashboard.
+	 *         dashbord.
 	 */
 	@PostMapping("/login")//@Valid @ModelAttribute("loginDetail") Login loginDetail,
 	public String loginUser(@RequestParam("countryCode") String countryCode, @RequestParam("phone") String phone, @RequestParam("password") String password, Model model, HttpSession session) {
@@ -82,15 +82,14 @@ public class LoginController {
 			return "login";
 		}
 		phone = countryCode + phone;
-		User user = userService.getUser(phone, password);
-	
-		if (user!=null) {
+		
+		if (userService.validateUser(phone, password)) {
 			// set session data
-			session.setAttribute("userid", user.getPhone());
+			session.setAttribute("userid", phone);
 			session.setMaxInactiveInterval(20 * 60);
 			return "redirect:/dashboard";
 		} else {
-			model.addAttribute("status_failure", "bad credentials !");
+			model.addAttribute("status_failure", "Wrong phone or password !");
 			return "login";
 		}
 	}

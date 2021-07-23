@@ -24,43 +24,60 @@ public class UserDao {
 	JdbcTemplate jt;
 	
 	// save user data to database
-	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public boolean saveUser(User user) {
-		String sqlquery = "INSERT INTO User(id, fname, lname, email, role, password) values(:id, :fname, :lname, :email, :role, :password)";
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("id", user.getPhone());
-		params.addValue("fname", user.getFname());
-		params.addValue("lname", user.getLname());
-		params.addValue("email", user.getEmail());
-		params.addValue("role", user.getRole());
-		params.addValue("password", user.getPassword());
-
-		int status = template.update(sqlquery, params);
-		return (status > 0 ? true : false);
-		
+		if(saveLoginDetail(user.getPhone(), user.getPassword())) {
+			String sqlquery = "INSERT INTO User(id, fname, lname, email, role) values(:id, :fname, :lname, :email, :role)";
+			MapSqlParameterSource params = new MapSqlParameterSource();
+			params.addValue("id", user.getPhone());
+			params.addValue("fname", user.getFname());
+			params.addValue("lname", user.getLname());
+			params.addValue("email", user.getEmail());
+			params.addValue("role", user.getRole());
+			int status = template.update(sqlquery, params);
+			return (status > 0 ? true : false);
+		}else {
+			return false;
+		}
 	}
-
 	
-	// fetch user of given detail
-	public User getUser(String id, String password) {
+	// get password of user
+	public String getUserPassword(String userid) {
+		String sql = "SELECT password FROM Login WHERE id = ?;";
 		try {
-			String sql = "SELECT id, fname, lname, email, role, image FROM User WHERE id=? AND password=?";
-			Map<String, Object> map = jt.queryForMap(sql, new Object[] {id, password});
-			User user = new User();
-			user.setPhone(map.get("id").toString());
-			user.setFname(map.get("fname").toString());
-			user.setLname(map.get("lname").toString());
-			user.setEmail(map.get("email").toString());
-			user.setRole(map.get("role").toString());
-			user.setImage(map.get("image").toString());
-			user.setPassword(null);
-			user.setConfirmPassword(null);
-			return user;
-		} catch(Exception e) {
+			return jt.queryForObject(sql, String.class, userid);
+		}catch (Exception e) {
 			return null;
 		}
-		
 	}
+	
+	public boolean saveLoginDetail(String userid, String password) {
+		String sql = "INSERT INTO Login (id, password) VALUES(?, ?);";
+		int rowCount = jt.update(sql, userid, password);
+		return (rowCount == 1)?true:false;
+	}
+	
+
+	
+//	// fetch user of given detail
+//	public User getUser(String id, String password) {
+//		try {
+//			String sql = "SELECT id, fname, lname, email, role, image FROM User WHERE id=? AND password=?";
+//			Map<String, Object> map = jt.queryForMap(sql, new Object[] {id, password});
+//			User user = new User();
+//			user.setPhone(map.get("id").toString());
+//			user.setFname(map.get("fname").toString());
+//			user.setLname(map.get("lname").toString());
+//			user.setEmail(map.get("email").toString());
+//			user.setRole(map.get("role").toString());
+//			user.setImage(map.get("image").toString());
+//			user.setPassword(null);
+//			user.setConfirmPassword(null);
+//			return user;
+//		} catch(Exception e) {
+//			return null;
+//		}
+//		
+//	}
 	
 	public User getUser(String id) {
 		try {

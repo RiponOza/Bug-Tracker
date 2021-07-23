@@ -24,6 +24,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,34 +45,24 @@ public class UserService {
 	@Value("${profile-image-path}")
 	private String profileImagePath;
 
-	/**
-	 * This method takes the user provided password and create hash code of length
-	 * 16 and returns it.
-	 * 
-	 * @param passwordToHash
-	 * @return encrypted password
-	 */
-	public String encryptPassword(String passwordToHash) {
-		String generatedPassword = null;
+
+	public String encryptPassword(String password) {
 		try {
-			// Create MessageDigest instance for MD5
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			// Add password bytes to digest
-			md.update(passwordToHash.getBytes());
-			// Get the hash's bytes
-			byte[] bytes = md.digest();
-			// This bytes[] has bytes in decimal format;
-			// Convert it to hexadecimal format
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < bytes.length; i++) {
-				sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-			}
-			// Get complete hashed password in hex format
-			generatedPassword = sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			return BCrypt.hashpw(password, BCrypt.gensalt(10));
+		} catch (Exception e) {
+			return null;
 		}
-		return generatedPassword;
+	}
+	
+	// validates the user credentials
+	public boolean validateUser(String userid, String password) {
+		String hashedPassword = userDao.getUserPassword(userid);
+		if(BCrypt.checkpw(password, hashedPassword)) {
+			return true;
+		}else {
+			return false;
+		}
+		
 	}
 
 	/**
@@ -80,6 +71,7 @@ public class UserService {
 	 * @param user This is user object which holds information of a user.
 	 * @return true for successful registration and false for failure.
 	 */
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean registerUser(User user) {
 		// encrypts the user provided password
 		String encPassword = encryptPassword(user.getPassword());
@@ -89,33 +81,22 @@ public class UserService {
 	}
 
 	/**
-	 * This method checks whether a user is registered one or not.
-	 * 
-	 * @param email    This is user provided email.
-	 * @param password This is user provided password.
-	 * @return user object.
-	 */
-	public User getUser(String id, String password) {
-		//System.out.println("inside service");
-		// encrypts the user provided password
-		String encPassword = encryptPassword(password);
-		return userDao.getUser(id, encPassword);
-	}
-
-	/**
 	 * This method gives user details.
 	 * 
 	 * @param email This is user provided email.
 	 * @return user object.
 	 */
+	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public User getUser(String id) {
 		return userDao.getUser(id);
 	}
 	
+	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public User getUserByEmail(String email) {
 		return userDao.getUserByEmail(email);
 	}
 
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean updateUser(User user) {
 		return userDao.updateUser(user);
 	}
@@ -130,7 +111,7 @@ public class UserService {
 		return userDao.updatePassword(id, encPassword);
 	}
 
-	@Transactional(isolation = Isolation.READ_COMMITTED)
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean saveProfilePic(String id, MultipartFile file) throws IOException {
 		File f = new File(profileImagePath + id + ".jpg");
 		if(!f.exists()) {
