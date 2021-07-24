@@ -75,21 +75,24 @@ public class LoginController {
 	 *         dashbord.
 	 */
 	@PostMapping("/login")//@Valid @ModelAttribute("loginDetail") Login loginDetail,
-	public String loginUser(@RequestParam("countryCode") String countryCode, @RequestParam("phone") String phone, @RequestParam("password") String password, Model model, HttpSession session) {
+	public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password, Model model, HttpSession session) {
 		
-		if (phone.isBlank() || password.isBlank()||countryCode.isBlank()) {
+		if (email.isBlank() || password.isBlank()) {
 			model.addAttribute("status_failure", "fields shouldn't be empty !");
 			return "login";
 		}
-		phone = countryCode + phone;
 		
-		if (userService.validateUser(phone, password)) {
+		if (userService.validateUser(email, password)) {
 			// set session data
-			session.setAttribute("userid", phone);
+			User user = userService.getUserByEmail(email);
+			session.setAttribute("userid", user.getPhone());
+			session.setAttribute("role", user.getRole());
 			session.setMaxInactiveInterval(20 * 60);
 			return "redirect:/dashboard";
 		} else {
-			model.addAttribute("status_failure", "Wrong phone or password !");
+			model.addAttribute("email", email);
+			model.addAttribute("password", password);
+			model.addAttribute("status_failure", "Wrong email or password !");
 			return "login";
 		}
 	}

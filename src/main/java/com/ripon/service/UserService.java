@@ -55,8 +55,8 @@ public class UserService {
 	}
 	
 	// validates the user credentials
-	public boolean validateUser(String userid, String password) {
-		String hashedPassword = userDao.getUserPassword(userid);
+	public boolean validateUser(String email, String password) {
+		String hashedPassword = userDao.getUserPassword(email);
 		if(hashedPassword==null) {
 			return false;
 		}
@@ -76,11 +76,15 @@ public class UserService {
 	 */
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean registerUser(User user) {
-		// encrypts the user provided password
-		String encPassword = encryptPassword(user.getPassword());
-		// save encrypted password
-		user.setPassword(encPassword);
-		return userDao.saveUser(user);
+		try {
+			// encrypts the user provided password
+			String encPassword = encryptPassword(user.getPassword());
+			userDao.saveUser(user);
+			userDao.saveLoginDetail(user.getEmail(), encPassword);
+			return true;
+		}catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**

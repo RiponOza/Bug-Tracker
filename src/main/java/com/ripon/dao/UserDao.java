@@ -25,7 +25,6 @@ public class UserDao {
 	
 	// save user data to database
 	public boolean saveUser(User user) {
-		if(saveLoginDetail(user.getPhone(), user.getPassword())) {
 			String sqlquery = "INSERT INTO User(id, fname, lname, email, role) values(:id, :fname, :lname, :email, :role)";
 			MapSqlParameterSource params = new MapSqlParameterSource();
 			params.addValue("id", user.getPhone());
@@ -35,24 +34,21 @@ public class UserDao {
 			params.addValue("role", user.getRole());
 			int status = template.update(sqlquery, params);
 			return (status > 0 ? true : false);
-		}else {
-			return false;
-		}
 	}
 	
 	// get password of user
-	public String getUserPassword(String userid) {
-		String sql = "SELECT password FROM Login WHERE id = ?;";
+	public String getUserPassword(String userEmail) {
+		String sql = "SELECT password FROM Login WHERE email = ?;";
 		try {
-			return jt.queryForObject(sql, String.class, userid);
+			return jt.queryForObject(sql, String.class, userEmail);
 		}catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public boolean saveLoginDetail(String userid, String password) {
-		String sql = "INSERT INTO Login (id, password) VALUES(?, ?);";
-		int rowCount = jt.update(sql, userid, password);
+	public boolean saveLoginDetail(String email, String password) {
+		String sql = "INSERT INTO Login (email, password) VALUES(?, ?);";
+		int rowCount = jt.update(sql, email, password);
 		return (rowCount == 1)?true:false;
 	}
 	
