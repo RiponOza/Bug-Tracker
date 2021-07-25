@@ -169,6 +169,7 @@ public class ProjectDao {
 		}
 	}
 	
+	// unassign user from project
 	public boolean removeUserFromProject(String userId, String projectId) {
 		try {
 			String sql = "DELETE FROM Project_User WHERE user_id=? AND project_id=?;";
@@ -178,6 +179,7 @@ public class ProjectDao {
 			return false;
 		}
 	}
+	
 	
 //	public List<User> getUsersOfProject(String projectId){
 //		String sql = "SELECT id, fname, lname, email, role, image FROM User WHERE id IN (SELECT user_id FROM Project_User WHERE project_id = ?);";

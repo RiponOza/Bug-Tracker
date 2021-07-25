@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ripon.entity.Project;
 import com.ripon.entity.User;
 import com.ripon.service.ProjectService;
+import com.ripon.service.TicketService;
 import com.ripon.service.UserService;
 
 @Controller
@@ -33,6 +34,9 @@ public class ProjectController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private TicketService ticketService;
 
 	@GetMapping("/create-project")
 	public String getCreateProject(Model model, HttpSession session) {
@@ -144,15 +148,6 @@ public class ProjectController {
 		return "redirect:/get-project-pm";
 
 	}
-		
-	// remove user from project
-	@PostMapping("/remove-user-from-project")
-	public String removeUserFromProject(@RequestParam("userId") String userId, @RequestParam("projectId") String projectId,
-			Model model, HttpSession session) {
-			projectService.removeUserFromProject(userId, projectId);
-		return "redirect:/get-project-pm";
-
-	}
 	
 	
 	
@@ -252,25 +247,24 @@ public class ProjectController {
 		}
 	}
 	
-	
-	
-//	@GetMapping("/manage-project-user")
-//	public String addUserToProject(HttpSession session) {
-//		if(session.getAttribute("userid")==null) {
-//			return "redirect:/login";
-//		}
-//		User manager = userService.getUser(session.getAttribute("userid").toString());
-//		if(manager==null) {
-//			return "redirect:/login";
-//		}
-//		if(!manager.getRole().equals("PM")) {
-//			return "redirect:/login";
-//		}
-//		return "manage_project_user";
+//	// remove user from project
+//	@CrossOrigin
+//	@GetMapping("/remove-user-from-project")
+//	public String removeUserFromProject(@RequestParam("userId") String userId,
+//			@RequestParam("projectId") String projectId, Model model, HttpSession session) {
+//		projectService.removeUserFromProject(userId, projectId);
+//		return "redirect:/get-project-pm";
+//
 //	}
 	
- 
-	
+	// remove user from project
+		@CrossOrigin
+		@ResponseBody
+		@GetMapping("/remove-user-from-project")
+		public boolean removeUserFromProject(@RequestParam("userId") String userId,
+				@RequestParam("projectId") String projectId, Model model, HttpSession session) {
+			return projectService.removeUserFromProject(userId, projectId);
+		}
 	
 	
 	@PostMapping("/delete-project")

@@ -13,8 +13,8 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 <style>
 	body{
@@ -40,9 +40,6 @@
 	}
 </style>
 <body>
-
-	<input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
-
 	<div class="row container-fluid">
 		<div class="col-md-3 col-sm-0"></div>
 		<div id="registration_box" class="col-md-6 col-sm-12"
@@ -358,11 +355,16 @@
 				</div>
 				<button type="submit" id="submit_button" class="btn btn-warning" >Register</button>
 			</form><br>
-			<a class="text-white" th:href=@{/login}>Already a user? Log in.</a>
+			<div>
+				<i class="fa fa-sign-in" aria-hidden="true"></i> <a class="text-white" th:href=@{/login}>Already a user? Log in.</a>
+			</div>
 		</div>
 		<div class="col-md-3 col-sm-0"></div>
 	</div>
 	<br><br><br>
+	
+	<!--HOST INFORMATION-->
+	<input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
 </body>
 <script>
 	let validateEmail = ()=>{

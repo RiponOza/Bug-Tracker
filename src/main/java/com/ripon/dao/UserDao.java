@@ -51,29 +51,7 @@ public class UserDao {
 		int rowCount = jt.update(sql, email, password);
 		return (rowCount == 1)?true:false;
 	}
-	
-
-	
-//	// fetch user of given detail
-//	public User getUser(String id, String password) {
-//		try {
-//			String sql = "SELECT id, fname, lname, email, role, image FROM User WHERE id=? AND password=?";
-//			Map<String, Object> map = jt.queryForMap(sql, new Object[] {id, password});
-//			User user = new User();
-//			user.setPhone(map.get("id").toString());
-//			user.setFname(map.get("fname").toString());
-//			user.setLname(map.get("lname").toString());
-//			user.setEmail(map.get("email").toString());
-//			user.setRole(map.get("role").toString());
-//			user.setImage(map.get("image").toString());
-//			user.setPassword(null);
-//			user.setConfirmPassword(null);
-//			return user;
-//		} catch(Exception e) {
-//			return null;
-//		}
-//		
-//	}
+		
 	
 	public User getUser(String id) {
 		try {

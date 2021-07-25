@@ -48,10 +48,18 @@ public class TicketService {
 		return ticketDao.unassignTicketOfProjectManager(managerId, projectId);
 	}
 	
-	// assign and unassign users to ticket
+	// checks whether a user is assigned to ticket or not
+	public boolean doesUserHasTicket(String userid) {
+		return ((ticketDao.getTicketsOfUser(userid)==null)?false:true);
+	}
+	
+	// assign users to ticket
 	public boolean assignTicketToUser(String userid) {
 		return false;
 	}
+	
+	// unassign user of ticket
+	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public boolean unassignTicketOfUser(String userid) {
 		return false;
 	}
