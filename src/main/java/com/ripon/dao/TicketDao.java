@@ -24,7 +24,7 @@ public class TicketDao {
 	private final String get_ticket_manager_query = "SELECT id, title, descr, status, priority, type,  assigned_user_id, project_id, manager_id, date_format(created_date, '%d-%M-%Y') as created_date, time_format(created_time, '%h:%i %p') as created_time, date_format(last_updated_date, '%d-%M-%Y') as last_updated_date, time_format(last_updated_time, '%h:%i %p') as last_updated_time FROM Ticket WHERE manager_id =? ORDER BY priority DESC;";
 	private final String get_ticket_assigned_user_query = "SELECT id, title, descr, status, priority, type,  assigned_user_id, project_id, manager_id, date_format(created_date, '%d-%M-%Y') as created_date, time_format(created_time, '%h:%i %p') as created_time, date_format(last_updated_date, '%d-%M-%Y') as last_updated_date, time_format(last_updated_time, '%h:%i %p') as last_updated_time FROM Ticket WHERE assigned_user_id =? ORDER BY priority DESC;";
 	private final String get_ticket_project_query = "SELECT id, title, descr, status, priority, type,  assigned_user_id, project_id, manager_id, created_date, created_time, last_updated_date, last_updated_time FROM Ticket WHERE project_id =? ORDER BY priority DESC?;";
-	private final String update_ticket_query = "UPDATE Ticket SET id=?, title=?, descr=? , project_id=? , manager_id=?, status=?, type=?, priority=?, created_date=?, created_time=?, last_updated_date=?, last_updated_time=? WHERE id=?;";
+	private final String update_ticket_query = "UPDATE Ticket SET id=?, title=?, descr=? , project_id=? , manager_id=?, assigned_user_id=?, status=?, type=?, priority=?, created_date=?, created_time=?, last_updated_date=?, last_updated_time=? WHERE id=?;";
 
 	
 	
@@ -93,22 +93,45 @@ public class TicketDao {
 	public boolean updateTicket(Ticket ticket) {
 		int rowCount = jt.update(update_ticket_query,
 				new Object[] { ticket.getId(), ticket.getTitle(), ticket.getDescr(), ticket.getProjectId(),
-						ticket.getManagerId(), ticket.getStatus(), ticket.getType(), ticket.getPriority(),
+						ticket.getManagerId(), ticket.getAssignedUserId(),ticket.getStatus(), ticket.getType(), ticket.getPriority(),
 						ticket.getCreatedDate(), ticket.getCreatedTime(), ticket.getLastUpdatedDate(),
-						ticket.getLastUpdatedTime(), ticket.getTitle() });
+						ticket.getLastUpdatedTime(), ticket.getId() });
 		return (rowCount == 1) ? true : false;
 	}
 	
 	
-	public boolean assignTicketToUser(String ticketId, String userId) {
-		return false;
+	
+	
+	// assign ticket to a user
+	public boolean assignTicketToUser(String userId, String ticketId) {
+		try {
+			String sql = "UPDATE Ticket SET assigned_user_id = ? WHERE id =?;";
+			return ((jt.update(sql, userId, ticketId)==1)?true:false);
+		}catch (Exception e) {
+			return false;
+		}
+		
 	}
+	
+	// unassign ticket to a user
+	public boolean unassignTicketToUser(String ticketId) {
+		try {
+			String sql = "UPDATE Ticket SET assigned_user_id = null WHERE id = ?;";
+			return ((jt.update(sql, ticketId) == 1) ? true : false);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
 	
 	public boolean unassignTicketOfProjectManager(String managerId, String projectId) {
 		String sql = "UPDATE Ticket SET manager_id = null WHERE manager_id = ? AND project_id=?;";
 		int rowEffected = jt.update(sql, managerId, projectId);
 		return rowEffected >= 1 ? true : false;
 	}
+	
 	
 	public boolean assignTicketOfProjectManager(String managerId, String projectId) {
 		String sql = "UPDATE Ticket SET manager_id = ? WHERE project_id=?;";

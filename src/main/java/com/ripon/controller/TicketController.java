@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.annotation.SessionScope;
 
 import com.ripon.entity.Project;
@@ -131,11 +133,15 @@ public class TicketController {
 			model.addAttribute("userName", user.getFname() + " " + user.getLname());
 			model.addAttribute("email", user.getEmail());
 			model.addAttribute("phone", user.getPhone());
-			model.addAttribute("role", user.getRole());
-			model.addAttribute("image", user.getImage());
+			model.addAttribute("role", User.ROLE.get(user.getRole()));
+			model.addAttribute("image", "/profile-image/" + user.getImage());
 		}else {
 			model.addAttribute("isAssigned", false);
 		}
+		
+		// get list of all users in the project
+		List<User> allUsersList = projectService.getUsersOfProject(ticket.getProjectId()+"");
+		model.addAttribute("allUsersList", allUsersList);
 		return "ticket_detail";
 	}
 	
@@ -161,12 +167,21 @@ public class TicketController {
 		model.addAttribute("ticketCount", ticketList.size());
 		return "show_tickets";
 	}
-	
-	// assign user to a project
-	public String assignUserToProject(@RequestParam("email") String email, @RequestParam("projectId") String projectId) {
-		User user = userService.getUserByEmail(email);
-		ticketService.assignTicketToUser(email);
-		return "get-project-pm";
+
+	// assign ticket to a user
+	@GetMapping("/assign-ticket-to-user")
+	public String assignTicketToUser(@RequestParam("userId") String userId, @RequestParam("ticketId") String ticketId) {
+		ticketService.assignTicketToUser(userId, ticketId);
+		return "redirect:/ticket-detail/"+ticketId;
 	}
+	
+	// unassign user from a ticket
+	@CrossOrigin
+	@ResponseBody
+	@GetMapping("/unassign-ticket-of-user")
+	public Boolean unassignTicketOfUser(@RequestParam("ticketId") String ticketId) {
+		return ticketService.unassignTicketOfUser(ticketId);
+	}
+	
 
 }

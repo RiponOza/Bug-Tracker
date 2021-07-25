@@ -23,7 +23,7 @@
         background-color: white;
     }
 
-    .btn{
+    .btn {
         border-radius: 0px;
     }
 
@@ -79,7 +79,11 @@
         box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     }
 
-    #project_not_assigned h4 {
+    #ticket_not_assigned h4 {
+        padding: 40px 20px 40px 20px;
+    }
+
+    #ticket_not_assigned_ajax h4 {
         padding: 40px 20px 40px 20px;
     }
 
@@ -111,13 +115,14 @@
         transform: translate(-50%, -50%) scale(0);
         background: #fff;
         width: 95%;
-        max-width: 400px;
+        max-width: 700px;
         height: 400px;
         z-index: 2;
         text-align: center;
         box-sizing: border-box;
         font-family: "Open Sans", sans-serif;
-        padding: 30px 20px 20px 20px;
+        padding: 50px 20px 20px 20px;
+        overflow-y: scroll;
     }
 
     .popup .close-btn {
@@ -157,27 +162,34 @@
         transition: all 300ms ease-in-out;
         transform: translate(-50%, -50%) scale(1);
     }
+
     /* POPUP END */
 
-    #delete-project{
+    #delete-project {
         margin: 40px 0px 40px 0px;
     }
-    #delete-project-main{
+
+    #delete-project-main {
         margin: 40px 0px 40px 0px;
         display: none;
     }
-    
+
+    .alert {
+        border-radius: 0px;
+    }
+
+    #assign-user-table thead .alert .alert-warning {
+        border-radius: 0px;
+    }
 </style>
 
 <body onload="formatPhone()">
-
-    <input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
 
     <header class="main-header">
         <h3><i class="fa fa-bug" aria-hidden="true"></i> Ticket Detail </h3>
     </header>
 
-    <!-- POPUP (ADD USER) -->
+    <!-- POPUP (ASSIGN USER) -->
     <div class="popup" id="popup">
         <div class="overlay"></div>
         <div class="content">
@@ -186,14 +198,28 @@
             <div id="popup-status" style="margin-top: 30px;"></div>
             <!--STATUS END-->
             <!--FORM START-->
-            <form method="POST" th:action="@{/assign-project}">
-                <input name="projectId" type="hidden" th:value="${projectId}">
-                <div class="form-group">
-                    <label for="email">Enter User's Email Id</label>
-                    <input oninput="validateManager()" name="email" type="email" class="form-control" id="manager-email" placeholder="Enter Email Id">
-                </div>
-                <button type="submit" class="btn btn-primary" id="popup-button" disabled><i class="fa fa-search" aria-hidden="true"></i> Assign</button>
-            </form>
+            <!--ALL USERS LIST START-->
+            <table id="assign-user-table" class="table table-hover">
+                <thead>
+                    <div class="alert alert-warning">
+                        <i class="fa fa-user-plus" aria-hidden="true"></i> Assign User
+                    </div>
+                </thead>
+                <tr th:each="user,p : ${allUsersList}" th:id="${user.phone}">
+                    <th th:text="${p.index+1}"></th>
+                    <td><img height="55px" width="55px" th:src="@{${user.image}}" alt="profile pic"></td>
+                    <th th:text="${user.fname + ' ' +user.lname}"></th>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <a th:href="@{/assign-ticket-to-user(userId=${user.phone}, ticketId=${ticketId})}">
+                            <button class="btn btn-primary">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Assign
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <!--ALL USERS LIST END-->
             <!--FORM END-->
         </div>
     </div>
@@ -219,6 +245,11 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!--Hidden form field-->
+                    <input id="userId" type="hidden" th:value="${phone}">
+                    <input id="ticketId" type="hidden" th:value="${id}">
+                    <input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
+                    <!--Hidden form field-->
                     <tr>
                         <th scope="row">Type</th>
                         <td th:text="${type}"></td>
@@ -251,7 +282,7 @@
                         <th scope="row">Updated Time</th>
                         <td th:text="${updatedTime}"></td>
                     </tr>
-                    
+
                 </tbody>
             </table>
             <!-- TICKET DETAIL END-->
@@ -261,17 +292,22 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
                     <div id="delete-project" class="text-center">
-                        <button onclick="showDeleteProject()" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> Delete Ticket</button>
+                        <button onclick="showDeleteProject()" class="btn btn-danger"><i class="fa fa-trash"
+                                aria-hidden="true"></i> Delete Ticket</button>
                     </div>
                     <div id="delete-project-main" class="text-center">
-                       <form method="POST" th:action="@{/delete-project}">
-                           <input type="hidden" name="projectId" th:value="${projectId}">
-                           <label for="confirmText">Enter <em>'delete'</em> in this box</label>
-                           <div class="form-group">
-                                <input oninput="validateConfirmText()" type="text" id="confirmText" name="confirmText" class="form-control" placeholder="Enter 'delete'" required autocomplete="off">
+                        <form method="POST" th:action="@{/delete-project}">
+                            <input type="hidden" name="projectId" th:value="${projectId}">
+                            <label for="confirmText">Enter <em>'delete'</em> in this box</label>
+                            <div class="form-group">
+                                <input oninput="validateConfirmText()" type="text" id="confirmText" name="confirmText"
+                                    class="form-control" placeholder="Enter 'delete'" required autocomplete="off">
                             </div>
-                            <button id="delProjectBtn" type="submit" class="btn btn-danger" disabled><i class="fa fa-trash" aria-hidden="true"></i> Delete Ticket</button>
-                            <button onclick="hideDeleteProject(event)" id="cancelProjectBtn"  class="btn btn-warning text-black"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+                            <button id="delProjectBtn" type="submit" class="btn btn-danger" disabled><i
+                                    class="fa fa-trash" aria-hidden="true"></i> Delete Ticket</button>
+                            <button onclick="hideDeleteProject(event)" id="cancelProjectBtn"
+                                class="btn btn-warning text-black"><i class="fa fa-times" aria-hidden="true"></i>
+                                Cancel</button>
                         </form>
                     </div>
                 </div>
@@ -281,10 +317,11 @@
 
             <!-- PROJECTS DETAIL END-->
 
+
         </div>
         <div class="col-md-4 col-sm-10">
             <!-- ASSIGNED USER DETAIL -->
-            <div id="project_not_assigned" th:if="${isAssigned}==false" class="text-center">
+            <div id="ticket_not_assigned" th:if="${isAssigned}==false" class="text-center">
                 <h4 class="alert alert-warning"><i class="fa fa-chain-broken" aria-hidden="true"></i> Ticket is not
                     assigned !</h4>
                 <!-- ASSIGN USER -->
@@ -292,8 +329,18 @@
                     Assign User</button>
                 <!-- ASSIGN USER -->
             </div>
+            <!--ASSIGN USER AJAX START-->
+            <div id="ticket_not_assigned_ajax" class="text-center" hidden>
+                <h4 class="alert alert-warning"><i class="fa fa-chain-broken" aria-hidden="true"></i> Ticket is not
+                    assigned !</h4>
+                <!-- ASSIGN USER -->
+                <button onclick="togglePopup()" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
+                    Assign User</button>
+                <!-- ASSIGN USER -->
+            </div>
+            <!--ASSIGN USER AJAX END-->
 
-            <div th:if="${isAssigned}==true" id="project_manager_detail">
+            <div th:if="${isAssigned}==true" id="assigned_user_detail">
                 <table class="table table-hover">
                     <thead class="thead-dark">
                         <tr>
@@ -323,12 +370,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <!--<a th:href="@{/unassign-project/__${projectId}__}">
-                    <button onclick="confirm('Do you want to unassign ?')" id="btn-unassign" class="btn btn-primary"><i
-                            class="fa fa-chain-broken" aria-hidden="true"></i> Unassign</button>
-                </a>-->
+                <button onclick="unassignUser()" id="btn-unassign" class="btn btn-primary"><i
+                    class="fa fa-chain-broken" aria-hidden="true"></i> Unassign</button>
+                </a>
             </div>
-            <!-- PROJECT MANAGER DETAIL END-->
+            <!-- ASSIGNED USER DETAIL END-->
         </div>
         <div class="col-md-1 col-sm-1"></div>
     </div>
@@ -362,7 +408,7 @@
         }
 
         // MANAGER VALIDATION
-        let validateManager = ()=>{
+        let validateManager = () => {
             $('#popup-status').text('');
             $('#manager-email').removeClass('is-invalid');
             $('#manager-email').removeClass('is-valid');
@@ -370,44 +416,65 @@
             $('#popup-button').attr('disabled', true);
             let managerEmail = $('#manager-email').val();
             let host = $('#host').val();
-            let url = 'http://'+ host +'/validate-manager?email=' + managerEmail;
-            //console.log(url)
+            let url = 'http://' + host + '/validate-manager?email=' + managerEmail;
             fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if(data == 1){
-                    $('#manager-email').addClass('is-valid');
-                    $('#popup-button').removeAttr('disabled');
-                }
-                if(data == -3){
-                    $('#manager-email').addClass('is-invalid');
-                    $('#popup-status').addClass('alert alert-danger');
-                    $('#popup-status').text('This manager is already assigned to a project!');
-                }
-                
-		});
+                .then(response => response.json())
+                .then(data => {
+                    if (data == 1) {
+                        $('#manager-email').addClass('is-valid');
+                        $('#popup-button').removeAttr('disabled');
+                    }
+                    if (data == -3) {
+                        $('#manager-email').addClass('is-invalid');
+                        $('#popup-status').addClass('alert alert-danger');
+                        $('#popup-status').text('This manager is already assigned to a project!');
+                    }
+
+                });
         }
 
-        let showDeleteProject = ()=>{
-            $('#delete-project-main').css({'display':'block'});
+        let showDeleteProject = () => {
+            $('#delete-project-main').css({ 'display': 'block' });
             $('#delete-project').hide();
         }
 
-        let hideDeleteProject = (event)=>{
+        let hideDeleteProject = (event) => {
             event.preventDefault();
-            $('#delete-project-main').css({'display':'none'});
+            $('#delete-project-main').css({ 'display': 'none' });
             $('#delete-project').show();
         }
 
-        let validateConfirmText = ()=>{
-            if($('#confirmText').val() === 'delete'){
+        let validateConfirmText = () => {
+            if ($('#confirmText').val() === 'delete') {
                 $('#delProjectBtn').removeAttr('disabled');
                 $('#confirmText').removeClass('is-invalid');
                 $('#confirmText').addClass('is-valid');
-            }else{
+            } else {
                 $('#delProjectBtn').attr('disabled', true);
                 $('#confirmText').removeClass('is-valid');
                 $('#confirmText').addClass('is-invalid');
+            }
+        }
+
+        // unassign user
+        const unassignUser = ()=>{
+            let ticketId = $('#ticketId').val();
+            let host = $('#host').val();
+            let url = 'http://' + host + '/unassign-ticket-of-user?ticketId=' + ticketId;
+            if(confirm('Do you want to remove the user ?')){
+                fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data == true) {
+                        alert('User is removed !');
+                        $('#assigned_user_detail').hide();
+                        $('#ticket_not_assigned_ajax').removeAttr('hidden');
+                    }
+                    if (data == false) {
+                        alert('Oops, Error occured !');
+                    }
+
+                });
             }
         }
 

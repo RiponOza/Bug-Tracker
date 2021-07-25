@@ -14,14 +14,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Ticket {
-	private long id;
+	private Long id;
 	@Size(min = 2, max = 200, message = "Characters must be more than 1 and less than 200 !")
 	private String title;
 	@Size(min = 0, max = 1000, message = "Maximum limit is 1000 characters !")
 	private String descr;
-	private long assignedUserId;
-	private long projectId;
-	private long managerId;
+	private Long assignedUserId;
+	private Long projectId;
+	private Long managerId;
 	private String status;
 	@NotNull(message = "Priority can't be empty")
 	private String priority;
@@ -41,10 +41,10 @@ public class Ticket {
 		PRIORITY.put(3, "High");
 	}
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getTitle() {
@@ -59,22 +59,22 @@ public class Ticket {
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}
-	public long getAssignedUserId() {
+	public Long getAssignedUserId() {
 		return assignedUserId;
 	}
-	public void setAssignedUserId(long assignedUserId) {
+	public void setAssignedUserId(Long assignedUserId) {
 		this.assignedUserId = assignedUserId;
 	}
-	public long getProjectId() {
+	public Long getProjectId() {
 		return projectId;
 	}
-	public void setProjectId(long projectId) {
+	public void setProjectId(Long projectId) {
 		this.projectId = projectId;
 	}
-	public long getManagerId() {
+	public Long getManagerId() {
 		return managerId;
 	}
-	public void setManagerId(long managerId) {
+	public void setManagerId(Long managerId) {
 		this.managerId = managerId;
 	}
 	public String getStatus() {

@@ -1,6 +1,7 @@
 package com.ripon.service;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,27 +49,49 @@ public class TicketService {
 		return ticketDao.unassignTicketOfProjectManager(managerId, projectId);
 	}
 	
+	// assign ticket to a user
+	public boolean assignTicketToUser(String userId, String ticketId) {
+		try {
+			ticketDao.assignTicketToUser(userId, ticketId);
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	// unassign a user from a ticket
+	public boolean unassignTicketOfUser(String ticketId) {
+		try {
+			ticketDao.unassignTicketToUser(ticketId);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+	
 	// checks whether a user is assigned to ticket or not
 	public boolean doesUserHasTicket(String userid) {
 		return ((ticketDao.getTicketsOfUser(userid)==null)?false:true);
 	}
 	
-	// assign users to ticket
-	public boolean assignTicketToUser(String userid) {
-		return false;
-	}
+//	// assign users to ticket
+//	@Transactional(isolation = Isolation.REPEATABLE_READ)
+//	public boolean assignTicketToUser(String userid) {
+//		return false;
+//	}
 	
-	// unassign user of ticket
-	@Transactional(isolation = Isolation.READ_COMMITTED)
-	public boolean unassignTicketOfUser(String userid) {
-		return false;
-	}
 	
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean deleteTicket(String ticketId) {
 		return ticketDao.deleteTicket(ticketId);
 	}
 	
 	// delete tickets of a project
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean deleteTicketsOfProject(String projectId) {
 		return ticketDao.deleteTicketsOfProject(projectId);
 	}

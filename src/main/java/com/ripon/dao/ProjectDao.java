@@ -169,6 +169,7 @@ public class ProjectDao {
 		}
 	}
 	
+	
 	// unassign user from project
 	public boolean removeUserFromProject(String userId, String projectId) {
 		try {
@@ -176,6 +177,18 @@ public class ProjectDao {
 			int rowUpdate = jt.update(sql, userId, projectId);
 			return rowUpdate==1?true:false;
 		}catch (Exception e) {
+			return false;
+		}
+	}
+	
+	
+	// unassign a user from all the tickets of a project
+	public boolean unassignUserFromAllTickets(String userId) {
+		try {
+			String sql = "UPDATE Ticket SET assigned_user_id = null WHERE assigned_user_id=?;";
+			return ((jt.update(sql, userId)==1)?true:false);
+		}catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

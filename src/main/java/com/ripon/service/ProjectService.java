@@ -92,11 +92,11 @@ public class ProjectService {
 		return projectDao.addUserToProject(userId, projectId);
 	}
 	
-	// remove users from a project
+	// removes users from a project
 	public boolean removeUserFromProject(String userId, String projectId) {
+		projectDao.unassignUserFromAllTickets(userId);
 		return projectDao.removeUserFromProject(userId, projectId);
 	}
-	
 	
 	
 	// gives list of users assigned to a project

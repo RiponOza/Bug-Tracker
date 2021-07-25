@@ -29,7 +29,7 @@ public class TestApi {
 	
 	@GetMapping("/test")
 	public List<User> test() {
-		return ps.getUsersOfProject("1");
+		return ps.getUsersOfProject("4");
 	}
 	
 	@GetMapping("/dv")
