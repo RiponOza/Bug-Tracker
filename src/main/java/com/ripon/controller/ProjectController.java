@@ -129,9 +129,7 @@ public class ProjectController {
 		model.addAttribute("daysPassed", project.getDaysPassed());
 		model.addAttribute("desc", project.getDesc());
 		model.addAttribute("projectId", project.getId());
-		List<User> userList = projectService.getUsersOfProject(project.getId().toString());
-		model.addAttribute("userList", userList);
-		model.addAttribute("userCount", (userList!=null ? userList.size() : 0 ) );
+		
 		return "get_project_pm";
 	}
 	
@@ -145,7 +143,7 @@ public class ProjectController {
 			projectService.addUserToProject(userId, projectId);
 		}
 
-		return "redirect:/get-project-pm";
+		return "redirect:/manage-project-user";
 
 	}
 	
@@ -162,7 +160,6 @@ public class ProjectController {
 		model.addAttribute("desc", project.getDesc());
 		model.addAttribute("projectId", project.getId());
 		String managerId = project.getManagerId();
-		System.out.println(project);
 		if(managerId == null) {
 			model.addAttribute("projectManager", null);
 		}else {
@@ -247,24 +244,15 @@ public class ProjectController {
 		}
 	}
 	
-//	// remove user from project
-//	@CrossOrigin
-//	@GetMapping("/remove-user-from-project")
-//	public String removeUserFromProject(@RequestParam("userId") String userId,
-//			@RequestParam("projectId") String projectId, Model model, HttpSession session) {
-//		projectService.removeUserFromProject(userId, projectId);
-//		return "redirect:/get-project-pm";
-//
-//	}
-	
+
 	// remove user from project
-		@CrossOrigin
-		@ResponseBody
-		@GetMapping("/remove-user-from-project")
-		public boolean removeUserFromProject(@RequestParam("userId") String userId,
-				@RequestParam("projectId") String projectId, Model model, HttpSession session) {
-			return projectService.removeUserFromProject(userId, projectId);
-		}
+	@CrossOrigin
+	@ResponseBody
+	@GetMapping("/remove-user-from-project")
+	public boolean removeUserFromProject(@RequestParam("userId") String userId,
+			@RequestParam("projectId") String projectId, Model model, HttpSession session) {
+		return projectService.removeUserFromProject(userId, projectId);
+	}
 	
 	
 	@PostMapping("/delete-project")
@@ -273,6 +261,17 @@ public class ProjectController {
 			projectService.deleteProject(projectId);
 		}
 		return "redirect:/my-projects";
+	}
+	
+	@GetMapping("/manage-project-user")
+	public String getManageProjectUserPage(HttpSession session, Model model) {
+		String managerId = session.getAttribute("userid").toString();
+		Project project = projectService.getProjectOfManager(managerId);
+		List<User> userList = projectService.getUsersOfProject(project.getId().toString());
+		model.addAttribute("projectId", project.getId());
+		model.addAttribute("userList", userList);
+		model.addAttribute("userCount", (userList!=null ? userList.size() : 0 ) );
+		return "manage_project_users";
 	}
 	
 

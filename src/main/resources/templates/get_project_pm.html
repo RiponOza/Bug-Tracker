@@ -109,13 +109,12 @@
     }
 
     footer {
-        padding: 100px;
+        padding: 0px;
     }
+
 </style>
 
-<body onload="formatPhone()">
-
-    <input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
+<body>
 
     <header class="main-header">
         <h3><i class="fa fa-bug" aria-hidden="true"></i> Project Detail </h3>
@@ -178,120 +177,22 @@
                     project !</h4>
             </div>
             <!-- NO PROJECT MESSAGE END-->
+        </div>
+        <div class="col-md-2 col-sm-1"></div>
 
-            <!--PROJECT USERS DETAIL START-->
+        <footer>
 
+        </footer>
 
-            <!--ASSIGN USER TO PROJECT START-->
-            <div th:if="${hasProject}!=false">
-                <br>
-                <div id="add-user-div" class="row">
-                    <div class="col-md-2 col-sm-0"></div>
-                    <div class="col-md-8 col-sm-12">
-                        <h4><i class="fa fa-user-plus" aria-hidden="true"></i> Add User</h4>
-                        <form method="POST" action="/add-user-to-project">
-                            <input type="hidden" name="projectId" th:value="${projectId}">
-                            <div class="form-group">
-                                <label for="email">Enter email address of the user </label>
-                                <input class="form-control" type="email" name="email"
-                                    placeholder="Enter email address ....">
-                            </div>
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-user-plus"
-                                    aria-hidden="true"></i> Add</button>
-                        </form>
-                    </div>
-                    <div class="col-md-2 col-sm-0"></div>
-                </div>
-                <!--ASSIGN USER TO PROJECT END-->
-
-                <!--NO USERS MESSAGE START-->
-                <br>
-                <div class="alert alert-warning" th:if="${userCount}==0">
-                    <h4>
-                        <i class="fa fa-meh-o" aria-hidden="true"></i> Oops, No users are available for this project !
-                    </h4>
-                </div>
-                <!--NO USERS MESSAGE END-->
-
-                <!--SHOWING USERS START-->
-                <br>
-
-                <div th:if="${userCount}!=0">
-                    <table class="table table-hover">
-                        <thead>
-                            <div class="jumbotron bg-gradient text-white">
-                                <h4><i class="fa fa-users" aria-hidden="true"></i>
-                                    Users In This Project
-                                </h4>
-                            </div>
-                        </thead>
-                        <tbody>
-                            <tr th:each="user,p : ${userList}" th:id="${user.phone}">
-                                <th th:text="${p.index+1}"></th>
-                                <td><img height="55px" width="55px" th:src="@{${user.image}}" alt="profile pic"></td>
-                                <th th:text="${user.fname + ' ' +user.lname}"></th>
-                                <td th:text="${user.email}"></td>
-                                <td><button th:onclick="getUserDetail('${user}')" class="btn btn-warning btn-sm text-black"><i class="fa fa-info-circle"
-                                            aria-hidden="true"></i> Detail</button></td>
-                                <td><button th:value="${user.phone}" onclick="removeUser(event)" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"
-                                                aria-hidden="true"></i> Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <hr>
-                    <!--SHOWING USERS END-->
-
-                    <!--PROJECT USERS DETAIL END-->
-                </div>
-                <div class="col-md-2 col-sm-1"></div>
-            </div>
-
-            <footer>
-
-            </footer>
-
-    <!--HOST INFORMATION-->
-	<input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
-    <input id="projectId" type="hidden" th:value="${projectId}">
 </body>
 <script th:inline="javascript">
-    
+
     $(document).ready(
         setTimeout(() => {
             $('#status_success').hide()
             $('#status_failure').hide()
         }, 5000)
     );
-
-    const removeUser = (event)=>{
-        let userId = event.target.value;
-        let projectId = $('#projectId').val();
-        let host = $('#host').val();
-		let url = 'http://' + host + '/remove-user-from-project?userId='+ userId + '&' + 'projectId=' + projectId;
-		if(confirm('Do you want to delete this user ?')==true){
-            fetch(url)
-		.then(response => response.json())
-		.then(data => {
-			if(data == true){
-				alert('User is removed');
-                let tableRowId = '#'+event.target.value;
-                $(tableRowId).hide();
-			}
-			if(data == false){
-				alert('Error Occured !');
-			}
-		});
-        }
-	}
-
-    const getUserDetail = (user) =>{
-       // var nameJs = /*[[${name}]]*/;
-        alert(user);
-    }
-    
-
-
-
 
 </script>
 
