@@ -22,8 +22,10 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import com.ripon.entity.Project;
 import com.ripon.entity.Ticket;
+import com.ripon.entity.TicketResource;
 import com.ripon.entity.User;
 import com.ripon.service.ProjectService;
+import com.ripon.service.TicketResourceService;
 import com.ripon.service.TicketService;
 import com.ripon.service.UserService;
 
@@ -38,6 +40,8 @@ public class TicketController {
 	private Ticket ticket;
 	@Autowired
 	private ProjectService projectService;
+	@Autowired
+	private TicketResourceService ticketResourceService;
 	
 	@GetMapping("/create-ticket")
 	public String getTicketPage(Model model, HttpSession session) {
@@ -142,6 +146,11 @@ public class TicketController {
 		// get list of all users in the project
 		List<User> allUsersList = projectService.getUsersOfProject(ticket.getProjectId()+"");
 		model.addAttribute("allUsersList", allUsersList);
+		
+		// get all the resources of ticket
+		List<TicketResource> resources = ticketResourceService.getTicketResources(ticketId);
+		model.addAttribute("resources", resources);
+		model.addAttribute("resourceCount", resources.size());
 		return "ticket_detail";
 	}
 	

@@ -124,7 +124,7 @@
         top: 0px;
         left: 0px;
         width: 100vw;
-        height: 100vh;
+        height: 100%;
         background: rgba(0, 0, 0, 0.7);
         z-index: 1;
         display: none;
@@ -156,18 +156,6 @@
         font-size: 30px;
     }
 
-    .popup .form-group {
-        margin-top: 50px;
-    }
-
-    .content button {
-        margin-top: 20px;
-    }
-
-    .content input {
-        font-weight: 400;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-    }
 
     .popup.active .overlay {
         display: block;
@@ -358,6 +346,11 @@
         $('#alert-box').hide();
         document.getElementById("popup").classList.toggle("active");
     }
+
+    $('.overlay').on('click', ()=>{
+        $('#alert-box').hide();
+        document.getElementById("popup").classList.toggle("active");
+    })
 
     // FORMAT PHONE NUMBER
     const formatPhone = (phone) =>{

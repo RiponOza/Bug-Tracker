@@ -45,7 +45,7 @@
     }
 
     footer {
-        height: 200px;
+        padding: 50px;
     }
 
     a {
@@ -94,6 +94,18 @@
 
     thead h4 {
         background-color: #764ba2;
+    }
+
+    #file-upload{
+        background-color: rgb(207, 207, 207);
+        padding: 20px 0px 20px 20px;
+    }
+    #file-upload h4{
+        padding-bottom: 10px;
+    }
+
+    .hide{
+        display: none;
     }
 
     /* POPUP START */
@@ -226,6 +238,7 @@
     </div>
     <!-- POPUP END -->
 
+    <br>
     <div class="row container-fluid">
         <div class="col-md-1 col-sm-1"></div>
         <div class="col-md-6 col-sm-10">
@@ -285,38 +298,10 @@
 
                 </tbody>
             </table>
+            <hr>
             <!-- TICKET DETAIL END-->
 
-            <!--DELETE TICKET START-->
-            <div class="row container-fluid">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <div id="delete-project" class="text-center">
-                        <button onclick="showDeleteProject()" class="btn btn-danger"><i class="fa fa-trash"
-                                aria-hidden="true"></i> Delete Ticket</button>
-                    </div>
-                    <div id="delete-project-main" class="text-center">
-                        <form method="POST" th:action="@{/delete-project}">
-                            <input type="hidden" name="projectId" th:value="${projectId}">
-                            <label for="confirmText">Enter <em>'delete'</em> in this box</label>
-                            <div class="form-group">
-                                <input oninput="validateConfirmText()" type="text" id="confirmText" name="confirmText"
-                                    class="form-control" placeholder="Enter 'delete'" required autocomplete="off">
-                            </div>
-                            <button id="delProjectBtn" type="submit" class="btn btn-danger" disabled><i
-                                    class="fa fa-trash" aria-hidden="true"></i> Delete Ticket</button>
-                            <button onclick="hideDeleteProject(event)" id="cancelProjectBtn"
-                                class="btn btn-warning text-black"><i class="fa fa-times" aria-hidden="true"></i>
-                                Cancel</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-md-1"></div>
-            </div>
-            <!--DELETE TICKET END-->
-
             <!-- PROJECTS DETAIL END-->
-
 
         </div>
         <div class="col-md-4 col-sm-10">
@@ -342,7 +327,7 @@
 
             <div th:if="${isAssigned}==true" id="assigned_user_detail">
                 <table class="table table-hover">
-                    <thead class="thead-dark">
+                    <thead>
                         <tr>
                             <h4><i class="fa fa-user-circle-o" aria-hidden="true"></i> Assigned User</h4>
                             <br>
@@ -370,22 +355,108 @@
                         </tr>
                     </tbody>
                 </table>
+                <hr>
                 <button onclick="unassignUser()" id="btn-unassign" class="btn btn-primary"><i
                     class="fa fa-chain-broken" aria-hidden="true"></i> Unassign</button>
                 </a>
             </div>
+            
             <!-- ASSIGNED USER DETAIL END-->
         </div>
         <div class="col-md-1 col-sm-1"></div>
     </div>
+    
+    <br><br>
 
-
+    <div class="row container-fluid">
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+            <div id="no-resources-available" class="alert alert-warning" th:classappend="${resourceCount==0} ? '' : 'hide'" >
+                <h4><i class="fa fa-file" aria-hidden="true"></i> No files available</h4>
+            </div>
+            <div id="resources-table" th:classappend="${resourceCount==0} ? 'hide' : ''">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col"><i class="fa fa-list-ol" aria-hidden="true"></i> Sl No</th>
+                            <th scope="col"><i class="fa fa-info-circle" aria-hidden="true"></i> File Name</th>
+                            <th scope="col"><i class="fa fa-file" aria-hidden="true"></i> File Type</th>
+                            <th scope="col"><i class="fa fa-calendar" aria-hidden="true"></i> Created Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${resources}" th:each="resource,p : ${resources}">
+                            <th scope="row" th:text="${p.index+1}"></th>
+                            <td th:text="${resource.resourceName}"></td>
+                            <td th:text="${resource.resourceType}"></td>
+                            <td th:text="${resource.created}"></td>
+                            <td>
+                                <div class="btn-group">
+                                    <a th:href="@{/show-resource(id=${ticketId}, name=${resource.resourceName})}" target="_blank">
+                                        <button class="btn btn-warning text-black"><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+                                    </a>
+                                    <a th:href="@{/delete-resource(resourceId=${resource.id}, ticketId=${ticketId}, resourceName=${resource.resourceName})}">
+                                        <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <!--TICKET RESOURCE START-->
+            <div id="file-upload">
+                <h4><i class="fa fa-file-o" aria-hidden="true"></i> Upload Documents</h4>
+                <form method="POST" th:action="@{/upload-files}" enctype="multipart/form-data">
+                    <input type="hidden" name="ticketId" th:value="${ticketId}" >
+                    <div class="form-group">
+                      <input id="file" type="file" name="file" class="form-control-file" multiple>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
+                  </form>
+            </div>
+            <!--TICKET RESOURCE END-->
+        </div>
+        <div class="col-md-1"></div>
+        </div>
+        <br>
+        <br>
+        <!--DELETE TICKET START-->
+        <div class="row container-fluid">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div id="delete-project" class="text-center">
+                    <button onclick="showDeleteProject()" class="btn btn-danger"><i class="fa fa-trash"
+                            aria-hidden="true"></i> Delete Ticket</button>
+                </div>
+                <div id="delete-project-main" class="text-center">
+                    <form method="POST" th:action="@{/delete-project}">
+                        <input type="hidden" name="projectId" th:value="${projectId}">
+                        <label for="confirmText">Enter <em>'delete'</em> in this box</label>
+                        <div class="form-group">
+                            <input oninput="validateConfirmText()" type="text" id="confirmText" name="confirmText"
+                                class="form-control" placeholder="Enter 'delete'" required autocomplete="off">
+                        </div>
+                        <button id="delProjectBtn" type="submit" class="btn btn-danger" disabled><i
+                                class="fa fa-trash" aria-hidden="true"></i> Delete Ticket</button>
+                        <button onclick="hideDeleteProject(event)" id="cancelProjectBtn"
+                            class="btn btn-warning text-black"><i class="fa fa-times" aria-hidden="true"></i>
+                            Cancel</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <!--DELETE TICKET END-->
 
     <footer>
 
     </footer>
 
-
+</body>
     <script>
         $(document).ready(
             setTimeout(() => {
