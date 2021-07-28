@@ -114,10 +114,10 @@ public class UserDao {
 	}
 	
 	
-	public boolean updatePassword(String id, String password) {
+	public boolean updatePassword(String email, String password) {
 		try {
-			String sql = "UPDATE User SET password=? WHERE id = ?";
-			int rowEffected = jt.update(sql, password, id);
+			String sql = "UPDATE Login SET password=? WHERE email = ?";
+			int rowEffected = jt.update(sql, password, email);
 			return (rowEffected>0);
 		} catch(Exception e) {
 			return false;

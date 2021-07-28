@@ -36,16 +36,15 @@ public class ResetPasswordController {
 	}
 	
 	@PostMapping("/send-otp")
-	public String sendOTP(@RequestParam("countryCode") String countryCode, @RequestParam("phone") String phone, Model model, HttpSession session) {
-		phone = countryCode.trim() + phone.trim();
-		User user = userService.getUser(phone);
-		//phone no is not registered
-		if(user==null) {
-			model.addAttribute("status_failure", "This phone number is not regitered !");
+	public String sendOTP(@RequestParam("email") String email, Model model, HttpSession session) {
+		//Email no is not registered
+		if(!userService.isEmailAvailable(email)) {
+			model.addAttribute("status_failure", "This email id is not regitered !");
 			return "ResetPassword";
 		}
 		// otp successfully sent
-		String otp = otpService.sendOtp(phone);
+		User user = userService.getUserByEmail(email);
+		String otp = otpService.sendOtp(email);
 		session.setAttribute("otp", otp);
 		session.setAttribute("phone", user.getPhone());
 		//otpService.invalidateOtp();
@@ -72,8 +71,8 @@ public class ResetPasswordController {
 			model.addAttribute("status_failure", "You entered wrong OTP !");
 			return "ChangePassword";
 		}
-		
-		boolean status = userService.updatePassword(session.getAttribute("phone").toString(), password);
+		User user = userService.getUser(session.getAttribute("phone").toString());
+		boolean status = userService.updatePassword(user.getEmail(), password);
 		
 		if(status) {
 			model.addAttribute("status_success", "Your password is successfully updated !");

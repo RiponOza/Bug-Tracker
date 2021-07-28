@@ -24,11 +24,11 @@ public class OtpService {
     }
 	
 	
-	public String sendOtp(String id) {
+	public String sendOtp(String email) {
 		String otp = generateOTP();
 		String sub = "OTP from bug tracker.";
 		String body = "Your OTP is " + otp + ". Do not share it with any one. Thank you !";
-		String to = userService.getUser(id).getEmail();
+		String to = email;
 		emailService.sendSimpleMessage(to, sub, body);
 		return otp;
 	} 

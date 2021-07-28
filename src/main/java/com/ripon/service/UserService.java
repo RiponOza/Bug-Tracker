@@ -113,9 +113,9 @@ public class UserService {
 	}
 	
 
-	public boolean updatePassword(String id, String password) {
+	public boolean updatePassword(String email, String password) {
 		String encPassword = encryptPassword(password);
-		return userDao.updatePassword(id, encPassword);
+		return userDao.updatePassword(email, encPassword);
 	}
 
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
