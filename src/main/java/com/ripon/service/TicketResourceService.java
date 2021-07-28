@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
@@ -42,7 +43,7 @@ public class TicketResourceService {
 			for (MultipartFile file : files) {
 				String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 				if(extension.equals("pdf") || extension.equals("txt") || extension.equals("docx") || extension.equals("ppt") || extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png")) {
-					String filename = RandomStringUtils.randomAlphanumeric(10) + "." + extension;
+					String filename = file.getOriginalFilename(); //RandomStringUtils.randomAlphanumeric(10) + "." + extension;					
 					fout = new FileOutputStream(new File(path + filename));
 					fout.write(file.getBytes());
 					// save file details in db
@@ -78,6 +79,8 @@ public class TicketResourceService {
 	public List<TicketResource> getTicketResources(String ticketId){
 		return ticketResourceDao.getTicketResources(ticketId);
 	}
+	
+	
 
 	public boolean deleteTicketResource(String resourceId, String ticketId, String resourceName) {
 		String path = fileUploadPath+"/"+"Tickets" + "/" + ticketId + "/" + resourceName;
@@ -86,6 +89,27 @@ public class TicketResourceService {
 			file.delete();
 		}
 		return ticketResourceDao.deleteTicketResource(resourceId);
+	}
+	
+	// delete all the resources of a ticket and the ticket folder
+	public boolean deleteTicketResources(String ticketId) {
+		try {
+			String path = fileUploadPath + "/Tickets/"+ticketId+"";
+			File file = new File(path);
+			if(file.list().length==0) {
+				file.delete();
+			}else {
+				File[] files = file.listFiles();
+				for(File f : files) {
+					f.delete();
+				}
+			}
+			file.delete();
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 }

@@ -65,6 +65,11 @@
 </style>
 
 <body> 
+
+    <div th:if="${param.msg!=null}">
+        <div onload="alert('iudiudsdhiufhiusdfh')"></div>
+    </div>
+
     <!--HEADER START-->  
     <header class="main-header">
         <h3><i class="fa fa-bug" aria-hidden="true"></i> My Tickets </h3>
@@ -126,21 +131,29 @@
        </div>
        <div class="col-md-1 col-sm-1"></div>
    </div>
-
-   
    
    <footer>
        
    </footer>
 
 
-   <script>
+   <script th:inline="javascript">
        $(document).ready(
 		setTimeout(()=>{
 			$('#status_success').hide()
 			$('#status_failure').hide()
 		}, 4000)
-	)
+	);
+
+    $(document).ready(()=>{
+        /*<![CDATA[*/
+        let msg = /*[[${param.msg}]]*/"default";
+        /*]]>*/
+        if(msg!=null && msg != undefined){
+            alert(msg);
+        }
+    });
+
        
    </script>
 </html>

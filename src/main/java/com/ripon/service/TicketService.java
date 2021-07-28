@@ -19,6 +19,8 @@ public class TicketService {
 	private TicketDao ticketDao;
 	@Autowired
 	private ProjectService projectService;
+	@Autowired
+	private TicketResourceService ticketResourceService;
 	
 	
 	public boolean saveTicket(Ticket ticket) {
@@ -85,9 +87,16 @@ public class TicketService {
 //	}
 	
 	
+	// delete a ticket and its related resources
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean deleteTicket(String ticketId) {
-		return ticketDao.deleteTicket(ticketId);
+		boolean status = ticketResourceService.deleteTicketResources(ticketId);
+		if (status) {
+			return ticketDao.deleteTicket(ticketId);
+		} else {
+			return false;
+		}
+
 	}
 	
 	// delete tickets of a project
@@ -95,4 +104,9 @@ public class TicketService {
 	public boolean deleteTicketsOfProject(String projectId) {
 		return ticketDao.deleteTicketsOfProject(projectId);
 	}
+	
+	
+	
+	
+	
 }

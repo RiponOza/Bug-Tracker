@@ -96,15 +96,16 @@
         background-color: #764ba2;
     }
 
-    #file-upload{
+    #file-upload {
         background-color: rgb(207, 207, 207);
         padding: 20px 0px 20px 20px;
     }
-    #file-upload h4{
+
+    #file-upload h4 {
         padding-bottom: 10px;
     }
 
-    .hide{
+    .hide {
         display: none;
     }
 
@@ -242,13 +243,6 @@
     <div class="row container-fluid">
         <div class="col-md-1 col-sm-1"></div>
         <div class="col-md-6 col-sm-10">
-            <!-- STATUS -->
-            <div id="status_success" th:if="${status_success}" th:text="${status_success}" class="alert alert-success">
-            </div>
-            <div id="status_failure" th:if="${status_failure}" th:text="${status_failure}" class="alert alert-danger">
-            </div>
-            <!-- STATUS END-->
-
             <!-- TICKET DETAIL START-->
             <table class="table table-striped">
                 <thead>
@@ -356,22 +350,31 @@
                     </tbody>
                 </table>
                 <hr>
-                <button onclick="unassignUser()" id="btn-unassign" class="btn btn-primary"><i
-                    class="fa fa-chain-broken" aria-hidden="true"></i> Unassign</button>
+                <button onclick="unassignUser()" id="btn-unassign" class="btn btn-primary"><i class="fa fa-chain-broken"
+                        aria-hidden="true"></i> Unassign</button>
                 </a>
             </div>
-            
+
             <!-- ASSIGNED USER DETAIL END-->
         </div>
         <div class="col-md-1 col-sm-1"></div>
     </div>
-    
+
     <br><br>
 
     <div class="row container-fluid">
         <div class="col-md-1"></div>
         <div class="col-md-6">
-            <div id="no-resources-available" class="alert alert-warning" th:classappend="${resourceCount==0} ? '' : 'hide'" >
+            <!-- STATUS -->
+            <div id="status_success" th:if="${param.status_success}" style="padding-top: 50px;">
+                <div class="alert alert-success"><h4><i class="fa fa-hand-peace-o" aria-hidden="true"></i> <span
+                        th:text="${param.status_success}"></span></h4></div>
+            </div>
+            <div id="status_failure" th:if="${status_failure}" th:text="${status_failure}" class="alert alert-danger">
+            </div>
+            <!-- STATUS END-->
+            <div id="no-resources-available" class="alert alert-warning"
+                th:classappend="${resourceCount==0} ? '' : 'hide'">
                 <h4><i class="fa fa-file" aria-hidden="true"></i> No files available</h4>
             </div>
             <div id="resources-table" th:classappend="${resourceCount==0} ? 'hide' : ''">
@@ -392,11 +395,15 @@
                             <td th:text="${resource.created}"></td>
                             <td>
                                 <div class="btn-group">
-                                    <a th:href="@{/show-resource(id=${ticketId}, name=${resource.resourceName})}" target="_blank">
-                                        <button class="btn btn-warning text-black"><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+                                    <a th:href="@{/show-resource(id=${ticketId}, name=${resource.resourceName})}"
+                                        target="_blank">
+                                        <button class="btn btn-warning text-black"><i class="fa fa-search-plus"
+                                                aria-hidden="true"></i></button>
                                     </a>
-                                    <a th:href="@{/delete-resource(resourceId=${resource.id}, ticketId=${ticketId}, resourceName=${resource.resourceName})}">
-                                        <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    <a
+                                        th:href="@{/delete-resource(resourceId=${resource.id}, ticketId=${ticketId}, resourceName=${resource.resourceName})}">
+                                        <button class="btn btn-danger"><i class="fa fa-trash-o"
+                                                aria-hidden="true"></i></button>
                                     </a>
                                 </div>
                             </td>
@@ -411,129 +418,137 @@
             <div id="file-upload">
                 <h4><i class="fa fa-file-o" aria-hidden="true"></i> Upload Documents</h4>
                 <form method="POST" th:action="@{/upload-files}" enctype="multipart/form-data">
-                    <input type="hidden" name="ticketId" th:value="${ticketId}" >
+                    <input type="hidden" name="ticketId" th:value="${ticketId}">
                     <div class="form-group">
-                      <input id="file" type="file" name="file" class="form-control-file" multiple>
+                        <input id="file" type="file" name="file" class="form-control-file" multiple>
                     </div>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
-                  </form>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i>
+                        Submit</button>
+                </form>
             </div>
             <!--TICKET RESOURCE END-->
         </div>
         <div class="col-md-1"></div>
-        </div>
-        <br>
-        <br>
-        <!--DELETE TICKET START-->
-        <div class="row container-fluid">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div id="delete-project" class="text-center">
-                    <button onclick="showDeleteProject()" class="btn btn-danger"><i class="fa fa-trash"
-                            aria-hidden="true"></i> Delete Ticket</button>
-                </div>
-                <div id="delete-project-main" class="text-center">
-                    <form method="POST" th:action="@{/delete-project}">
-                        <input type="hidden" name="projectId" th:value="${projectId}">
-                        <label for="confirmText">Enter <em>'delete'</em> in this box</label>
-                        <div class="form-group">
-                            <input oninput="validateConfirmText()" type="text" id="confirmText" name="confirmText"
-                                class="form-control" placeholder="Enter 'delete'" required autocomplete="off">
-                        </div>
-                        <button id="delProjectBtn" type="submit" class="btn btn-danger" disabled><i
-                                class="fa fa-trash" aria-hidden="true"></i> Delete Ticket</button>
-                        <button onclick="hideDeleteProject(event)" id="cancelProjectBtn"
-                            class="btn btn-warning text-black"><i class="fa fa-times" aria-hidden="true"></i>
-                            Cancel</button>
-                    </form>
-                </div>
+    </div>
+    <br>
+    <br>
+    <!--DELETE TICKET START-->
+    <div class="row container-fluid">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div id="delete-project" class="text-center">
+                <button onclick="showDeleteProject()" class="btn btn-danger"><i class="fa fa-trash"
+                        aria-hidden="true"></i> Delete Ticket</button>
             </div>
-            <div class="col-md-4"></div>
+            <div id="delete-project-main" class="text-center">
+                <form method="POST" th:action="@{/delete-ticket}">
+                    <input type="hidden" name="ticketId" th:value="${ticketId}">
+                    <label for="confirmText">Enter <em>'delete'</em> in this box</label>
+                    <div class="form-group">
+                        <input oninput="validateConfirmText()" type="text" id="confirmText" name="confirmText"
+                            class="form-control" placeholder="Enter 'delete'" required autocomplete="off">
+                    </div>
+                    <button id="delProjectBtn" type="submit" class="btn btn-danger" disabled><i class="fa fa-trash"
+                            aria-hidden="true"></i> Delete Ticket</button>
+                    <button onclick="hideDeleteProject(event)" id="cancelProjectBtn"
+                        class="btn btn-warning text-black"><i class="fa fa-times" aria-hidden="true"></i>
+                        Cancel</button>
+                </form>
+            </div>
         </div>
-        <!--DELETE TICKET END-->
+        <div class="col-md-4"></div>
+    </div>
+    <!--DELETE TICKET END-->
 
     <footer>
 
     </footer>
 
 </body>
-    <script>
-        $(document).ready(
-            setTimeout(() => {
-                $('#status_success').hide()
-                $('#status_failure').hide()
-            }, 5000)
-        );
+<script>
+    $(document).ready(
+        setTimeout(() => {
+            $('#status_success').hide()
+            $('#status_failure').hide()
+        }, 5000)
+    );
+
+    // take screen to status
+    $(document).ready(function () {
+        $('html, body').animate({
+            scrollTop: $('#status_success').offset().top
+        }, 'slow');
+    });
 
 
-        let formatPhone = () => {
-            let phone = $("#phone").text();
-            phone = '+' + phone.substr(0, 2) + '-' + phone.substr(2);
-            $("#phone").text(phone);
+    let formatPhone = () => {
+        let phone = $("#phone").text();
+        phone = '+' + phone.substr(0, 2) + '-' + phone.substr(2);
+        $("#phone").text(phone);
+    }
+
+    // POPUP FUNCTION
+    let togglePopup = () => {
+        $('#alert-box').hide();
+        document.getElementById("popup").classList.toggle("active");
+    }
+
+    // MANAGER VALIDATION
+    let validateManager = () => {
+        $('#popup-status').text('');
+        $('#manager-email').removeClass('is-invalid');
+        $('#manager-email').removeClass('is-valid');
+        $('#popup-status').removeClass('alert alert-danger');
+        $('#popup-button').attr('disabled', true);
+        let managerEmail = $('#manager-email').val();
+        let host = $('#host').val();
+        let url = 'http://' + host + '/validate-manager?email=' + managerEmail;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data == 1) {
+                    $('#manager-email').addClass('is-valid');
+                    $('#popup-button').removeAttr('disabled');
+                }
+                if (data == -3) {
+                    $('#manager-email').addClass('is-invalid');
+                    $('#popup-status').addClass('alert alert-danger');
+                    $('#popup-status').text('This manager is already assigned to a project!');
+                }
+
+            });
+    }
+
+    let showDeleteProject = () => {
+        $('#delete-project-main').css({ 'display': 'block' });
+        $('#delete-project').hide();
+    }
+
+    let hideDeleteProject = (event) => {
+        event.preventDefault();
+        $('#delete-project-main').css({ 'display': 'none' });
+        $('#delete-project').show();
+    }
+
+    let validateConfirmText = () => {
+        if ($('#confirmText').val() === 'delete') {
+            $('#delProjectBtn').removeAttr('disabled');
+            $('#confirmText').removeClass('is-invalid');
+            $('#confirmText').addClass('is-valid');
+        } else {
+            $('#delProjectBtn').attr('disabled', true);
+            $('#confirmText').removeClass('is-valid');
+            $('#confirmText').addClass('is-invalid');
         }
+    }
 
-        // POPUP FUNCTION
-        let togglePopup = () => {
-            $('#alert-box').hide();
-            document.getElementById("popup").classList.toggle("active");
-        }
-
-        // MANAGER VALIDATION
-        let validateManager = () => {
-            $('#popup-status').text('');
-            $('#manager-email').removeClass('is-invalid');
-            $('#manager-email').removeClass('is-valid');
-            $('#popup-status').removeClass('alert alert-danger');
-            $('#popup-button').attr('disabled', true);
-            let managerEmail = $('#manager-email').val();
-            let host = $('#host').val();
-            let url = 'http://' + host + '/validate-manager?email=' + managerEmail;
+    // unassign user
+    const unassignUser = () => {
+        let ticketId = $('#ticketId').val();
+        let host = $('#host').val();
+        let url = 'http://' + host + '/unassign-ticket-of-user?ticketId=' + ticketId;
+        if (confirm('Do you want to remove the user ?')) {
             fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data == 1) {
-                        $('#manager-email').addClass('is-valid');
-                        $('#popup-button').removeAttr('disabled');
-                    }
-                    if (data == -3) {
-                        $('#manager-email').addClass('is-invalid');
-                        $('#popup-status').addClass('alert alert-danger');
-                        $('#popup-status').text('This manager is already assigned to a project!');
-                    }
-
-                });
-        }
-
-        let showDeleteProject = () => {
-            $('#delete-project-main').css({ 'display': 'block' });
-            $('#delete-project').hide();
-        }
-
-        let hideDeleteProject = (event) => {
-            event.preventDefault();
-            $('#delete-project-main').css({ 'display': 'none' });
-            $('#delete-project').show();
-        }
-
-        let validateConfirmText = () => {
-            if ($('#confirmText').val() === 'delete') {
-                $('#delProjectBtn').removeAttr('disabled');
-                $('#confirmText').removeClass('is-invalid');
-                $('#confirmText').addClass('is-valid');
-            } else {
-                $('#delProjectBtn').attr('disabled', true);
-                $('#confirmText').removeClass('is-valid');
-                $('#confirmText').addClass('is-invalid');
-            }
-        }
-
-        // unassign user
-        const unassignUser = ()=>{
-            let ticketId = $('#ticketId').val();
-            let host = $('#host').val();
-            let url = 'http://' + host + '/unassign-ticket-of-user?ticketId=' + ticketId;
-            if(confirm('Do you want to remove the user ?')){
-                fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     if (data == true) {
@@ -546,9 +561,9 @@
                     }
 
                 });
-            }
         }
+    }
 
-    </script>
+</script>
 
 </html>

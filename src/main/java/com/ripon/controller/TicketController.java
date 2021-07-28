@@ -192,5 +192,18 @@ public class TicketController {
 		return ticketService.unassignTicketOfUser(ticketId);
 	}
 	
+	@CrossOrigin
+	@PostMapping("/delete-ticket")
+	public String deleteTicket(@RequestParam("ticketId") String ticketId) {
+		String msg = null;
+		boolean status = ticketService.deleteTicket(ticketId);
+		if(status) {
+			msg = "Successfully+deleted";
+		}else {
+			msg = "Oops,+Error+occured.+Try+again!";
+		}
+		return "redirect:/show-tickets?msg="+msg;
+	}
+	
 
 }

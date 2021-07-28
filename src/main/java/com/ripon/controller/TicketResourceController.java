@@ -28,9 +28,9 @@ public class TicketResourceController {
 	// uploading ticket resource
 	@PostMapping("/upload-files")
 	public String uploadFile(@RequestParam("file") MultipartFile[] files, @RequestParam("ticketId") String ticketId) throws IOException {
-		System.out.println("No of files = " + files.length);
+		//System.out.println("No of files = " + files.length);
 		ticketResourceService.uploadTicketResource(ticketId, files);
-		return "redirect:/ticket-detail/"+ticketId;
+		return "redirect:/ticket-detail/"+ticketId+"?status_success=File+is+added+successfully+!";
 	}
 
 	// showing resource of a ticket on the browser
@@ -61,7 +61,7 @@ public class TicketResourceController {
 	@GetMapping("/delete-resource")
 	public String deleteResource(@RequestParam("resourceId") String resourceId, @RequestParam("ticketId") String ticketId, @RequestParam("resourceName") String resourceName) {
 		ticketResourceService.deleteTicketResource(resourceId, ticketId, resourceName);
-		return "redirect:/ticket-detail/"+ticketId;
+		return "redirect:/ticket-detail/"+ticketId+"?status_success=File+is+deleted+!";
 	}
 	
 	
