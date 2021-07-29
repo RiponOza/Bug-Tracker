@@ -3,6 +3,8 @@ package com.ripon.api;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,12 @@ public class TestApi {
 	}
 	
 	@GetMapping("/noauth/test")
-	public List<TicketResource> test() {
-		return trs.getTicketResources("6");
+	public String test(HttpServletResponse response) {
+		response.setHeader("Cache-Control","no-cache, no-store, must-revalidate");
+	    response.setHeader("Pragma","no-cache");
+	    response.setHeader("Expires", "0");
+	    response.setHeader("Name", "Ripon-Oza");
+		return "Hello...";
 		//return FilenameUtils.getExtension(".gitignore");
 	}
 	

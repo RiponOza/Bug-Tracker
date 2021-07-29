@@ -69,9 +69,13 @@
                 <li>
                     <a th:href="@{/profile}"><i class="fa fa-user" aria-hidden="true"></i> My Profile</a>
                 </li>
+                <!--Logo-->
                 <li>
                     <a th:href="@{/logout}"><i class="fa fa-sign-out" aria-hidden="true"></i></i> Logout</a>
                 </li>
+                <!--li>
+                    <a onclick="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i></i> Logout</a>
+                </li-->
             </ul>
         </div>
     <!--SIDEBAR ENDING-->
@@ -116,7 +120,7 @@
 
 
 
-    <script>
+    <script th:inline="javascript">
     const data_1 = {
    		  labels: [
    		    'Bugs',
@@ -184,7 +188,14 @@
 		   document.getElementById('myChart_2'),
 		   config_2
    );
-         
+
+
+
+       // LOGOUT
+       const logout = ()=>{
+        let host = /*[[${@environment.getProperty('host')}]]*/"default";
+         window.location.replace("/login");
+       }  
          
     </script>
     

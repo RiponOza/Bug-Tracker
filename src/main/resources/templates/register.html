@@ -313,10 +313,11 @@
 
 				<!-- Phone Input -->
 				<div class="form-group">
-					<label for="phone">Phone no</label> <input type="text" minlength="10" maxlength="10"
+					<label for="phone">Phone no</label> <input oninput="validatePhone()" type="text" minlength="10" maxlength="10"
 						th:classappend="${#fields.hasErrors('phone')}?'is-invalid':''"
 						class="form-control" name="phone" id="phone"
 						th:value="${user.phone}" placeholder="Enter phone no">
+					<div id="phone-status" class="alert alert-danger" hidden></div>
 					<div th:each="e : ${#fields.errors('phone')}" th:text="${e}"
 						class="alert alert-danger"></div>
 				</div>
@@ -367,7 +368,7 @@
 	<input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
 </body>
 <script>
-	let validateEmail = ()=>{
+	const validateEmail = ()=>{
 		let email = $('#email').val();
 		let host = $('#host').val();
 		let url = 'http://' + host + '/noauth/is-email-available?email='+ email;
@@ -388,6 +389,23 @@
 				$('#submit_button').removeAttr('disabled');
 			}
 		});
+	}
+
+	const validatePhone = () => {
+		let phone = $('#phone').val();
+		if(isNaN(phone)==true){
+			$('#phone-status').removeAttr('hidden');
+			$('#phone').addClass('is-invalid');
+			$('#phone-status').html('Phone can\'t contain alphabets !');
+		}else{
+			if(phone.length==10){
+				$('#phone').addClass('is-valid');
+			}else{
+				$('#phone').removeClass('is-valid');
+			}
+			$('#phone-status').attr('hidden', 'true');
+			$('#phone').removeClass('is-invalid');
+		}
 	}
 </script>
 </html>
