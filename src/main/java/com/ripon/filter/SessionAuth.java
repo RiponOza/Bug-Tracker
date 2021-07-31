@@ -21,25 +21,24 @@ public class SessionAuth extends HttpFilter {
 	@Override
 	protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException
 	{
-		//System.out.println(request.getRequestURI());
-		response.setHeader("Cache-Control","no-cache, no-store, must-revalidate");
-	    response.setHeader("Pragma","no-cache");
-	    response.setHeader("Expires", "0");
-	    response.setHeader("Name", "Ripon-Oza");
+		
 		try {
 			String url = request.getRequestURI();
+			// file and image caching control
+			if(!url.contains("/public/") && !url.contains("/profile-image/") && !url.contains("/show-resource")) {
+				response.setHeader("Cache-Control","no-cache, no-store, must-revalidate");
+			    response.setHeader("Pragma","no-cache");
+			    response.setHeader("Expires", "0");
+			}
+			
 			if( url.contains("/noauth/") || url.contains("/public/") || url.equals("/") || url.equals("/login") || url.equals("/register") || url.equals("/reset-password") || url.equals("/send-otp")) {
 				//super.doFilter(request, response, chain);
 				chain.doFilter(request, response);
 			}
 			else {
 				if(request.getSession().getAttribute("userid")!=null) {
-					//super.doFilter(request, response, chain);
 					chain.doFilter(request, response);
 				} else {
-//					PrintWriter writer = response.getWriter();
-//					writer.print("Not Authorized !");
-//					writer.close();
 					response.sendRedirect("/");
 				}
 			}
