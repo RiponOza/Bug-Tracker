@@ -19,7 +19,7 @@
 <style>
 	body{
 		background-image: url("public/images/login_background.jpg");
-		background-repeat: no-repeat, repeat;
+		background-repeat: no-repeat;
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: cover;
@@ -28,6 +28,8 @@
 		background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		color: whitesmoke;
 		margin-top: 30px;
+		background-color: #dfe2e3;
+		padding: 50px;
 	}
 	#registration_box form{
 		margin-top: 30px;
@@ -38,12 +40,37 @@
 	.alert {
 		margin-top: 10px;
 	}
+
+	/* SMARTPHONE VIEW */
+	@media screen and (max-width: 600px) {
+	body{
+		background-color: #fff;
+		padding: 0px 0px 0px 0px;
+		margin: 0px 0px 0px 0px;
+	}
+	#registration_box{
+		background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: whitesmoke;
+		margin: 0px 0px 0px 0px;
+	}
+	
+	.row{
+		margin: 0px 0px 0px 0px;
+		padding: 0px 0px 0px 0px;
+	}
+
+	#submit_button{
+	margin-top: 20px;
+	}
+	.alert {
+		margin-top: 10px;
+	}
+	}
 </style>
 <body>
 	<div class="row container-fluid">
 		<div class="col-md-3 col-sm-0"></div>
-		<div id="registration_box" class="col-md-6 col-sm-12"
-			style="background-color: #dfe2e3; padding: 50px;">
+		<div id="registration_box" class="col-md-6 col-sm-12">
 
 			<h2 class="text-center">
 				<i class="fa fa-bug"></i> Bug Tracker Registration

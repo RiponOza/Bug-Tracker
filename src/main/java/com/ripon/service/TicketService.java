@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ripon.dao.TicketDao;
 import com.ripon.entity.Project;
 import com.ripon.entity.Ticket;
+import com.ripon.entity.TicketResource;
 
 @Service
 public class TicketService {
@@ -90,12 +91,12 @@ public class TicketService {
 	// delete a ticket and its related resources
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean deleteTicket(String ticketId) {
-		boolean status = ticketResourceService.deleteTicketResources(ticketId);
-		if (status) {
-			return ticketDao.deleteTicket(ticketId);
-		} else {
-			return false;
+		List<TicketResource> ticketResources = ticketResourceService.getTicketResources(ticketId);
+		boolean status = false;
+		if(ticketResources!=null) {
+			ticketResourceService.deleteTicketResources(ticketId);
 		}
+		return ticketDao.deleteTicket(ticketId);
 
 	}
 	

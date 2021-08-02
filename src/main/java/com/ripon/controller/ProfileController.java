@@ -117,6 +117,13 @@ public class ProfileController {
 		return IOUtils.toByteArray(fin);
 		
 	}
+	
+	
+	@GetMapping("/remove-profile-pic")
+	public String deleteProfilePic( HttpSession session ) {
+		userService.deleteProfilePic(session.getAttribute("userid").toString());
+		return "redirect:/edit-profile";
+	}
 
 	
 	

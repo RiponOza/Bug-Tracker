@@ -137,4 +137,8 @@ public class UserService {
 		return new File(profileImagePath + imageName);
 	}
 
+	// removes profile pic
+	public boolean deleteProfilePic(String userid) {
+		return userDao.deleteProfilePic(userid);
+	}
 }

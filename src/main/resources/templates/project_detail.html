@@ -166,16 +166,71 @@
         margin: 40px 0px 40px 0px;
         display: none;
     }
+
+    .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: right;
+        cursor: pointer;
+    }
     
+    /* SMARTPHONE VIEW */
+    @media screen and (max-width: 600px) {
+        .row{
+            padding: 0px;
+            margin: 0px;
+        }
+        .col-sm-12{
+            margin-bottom: 20px;
+        }
+        .main-header {
+        background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        color: white;
+        font-size: 25px;
+        margin-bottom: 30px;
+        font-weight: 600;
+        width: 100%;
+        height: 110px;
+    }
+    #btn-unassign {
+        margin-left: 35%;
+        border-radius: 0px;
+    }
+    
+        .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: left;
+        cursor: pointer;
+        padding: 10px 0px 10px 0px;
+    }
+    }
 </style>
 
 <body onload="formatPhone()">
 
     <input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
 
+    <!--HEADER START-->  
     <header class="main-header">
-        <h3><i class="fa fa-bug" aria-hidden="true"></i> Project Detail </h3>
+        <div class="row container-fluid">
+            <div class="col-md-6">
+                <h3><i class="fa fa-bug" aria-hidden="true"></i> Project Detail </h3>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/dashboard}" style="text-decoration: none;">
+                    <div class="dasshboard-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
     </header>
+    <!--HEADER END-->
 
     <!-- POPUP (ADD MANAGER) -->
     <div class="popup" id="popup">
@@ -201,8 +256,8 @@
     <!-- POPUP END -->
 
     <div class="row container-fluid">
-        <div class="col-md-1 col-sm-1"></div>
-        <div class="col-md-6 col-sm-10">
+        <div class="col-md-1 col-sm-0"></div>
+        <div class="col-md-6 col-sm-12">
             <!-- STATUS -->
             <div id="status_success" th:if="${status_success}" th:text="${status_success}" class="alert alert-success">
             </div>
@@ -269,7 +324,7 @@
             <!-- PROJECTS DETAIL END-->
 
         </div>
-        <div class="col-md-4 col-sm-10">
+        <div class="col-md-4 col-sm-12">
             <!-- PROJECT MANAGER DETAIL -->
             <div id="project_not_assigned" th:if="${projectManager}==null" class="text-center">
                 <h4 class="alert alert-warning"><i class="fa fa-chain-broken" aria-hidden="true"></i> Project is not
@@ -282,7 +337,7 @@
 
             <div th:if="${projectManager}!=null" id="project_manager_detail">
                 <table class="table table-hover">
-                    <thead class="thead-dark">
+                    <thead>
                         <tr>
                             <h4><i class="fa fa-user-circle-o" aria-hidden="true"></i> Project Manager</h4>
                             <br>
@@ -313,7 +368,7 @@
             </div>
             <!-- PROJECT MANAGER DETAIL END-->
         </div>
-        <div class="col-md-1 col-sm-1"></div>
+        <div class="col-md-1 col-sm-0"></div>
     </div>
 
 

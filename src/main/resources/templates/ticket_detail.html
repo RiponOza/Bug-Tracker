@@ -194,13 +194,34 @@
     #assign-user-table thead .alert .alert-warning {
         border-radius: 0px;
     }
+
+    .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: right;
+        cursor: pointer;
+    }
 </style>
 
 <body onload="formatPhone()">
 
+    <!--HEADER START-->  
     <header class="main-header">
-        <h3><i class="fa fa-bug" aria-hidden="true"></i> Ticket Detail </h3>
+        <div class="row container-fluid">
+            <div class="col-md-6">
+                <h3><i class="fa fa-bug" aria-hidden="true"></i> Ticket Detail </h3>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/dashboard}" style="text-decoration: none;">
+                    <div class="dasshboard-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
     </header>
+    <!--HEADER END-->
 
     <!-- POPUP (ASSIGN USER) -->
     <div class="popup" id="popup">

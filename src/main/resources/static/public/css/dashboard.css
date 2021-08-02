@@ -1,11 +1,16 @@
 body{
     background-color:white;
 }
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
 .main-header {
 	background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding-top: 20px;
     padding-bottom: 10px;
-    padding-left: 10px;
+    padding-left: 80px;
     color: white;
     font-size: 25px;
     margin-bottom: 30px;
@@ -22,11 +27,10 @@ body{
     border: none;background: none;
     color: white;
     background-color:transparent;
-    margin-right: 20px;
-    margin-left: 30px; 
-    float: left;
-    padding-left: 10px;padding-right: 10px;
-    font-size: 25px;
+    position: fixed;
+    top: 17px;
+    left: 30px;
+    font-size: 27px;
 }
 .sidebar-button:hover{
     color: rgb(204, 204, 204);
@@ -47,19 +51,25 @@ body{
 }
 
 .sidebar{
-    position: absolute;
+    position: fixed;
     top:0;
     left:-350px;
     display: block;
     z-index: 2;
     width: 350px;
-    height: 150%;
+    height: 100vh;
     background-color: #2978b5;
     transition: 0.4s;
 }
 
 .sidebar-appear{
     left:0;
+    position: fixed;
+    overflow-y: scroll;
+}
+
+.sidebar-appear::-webkit-scrollbar {
+    display: none;
 }
 
 .background{
@@ -95,6 +105,11 @@ body{
     font-size: 17px;
     padding-left: 20px;
 }
+
+.sidebar-end{
+    padding-top: 70px;
+}
+
 .cross{
     float: right;
     position: relative;
@@ -135,14 +150,140 @@ footer{
 }
 
 @media screen and (max-width: 600px) {
-  .crart_box{
+    .main-header {
+        background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 60px;
+        color: white;
+        font-size: 25px;
+        margin-bottom: 30px;
+        font-weight: 600;
         width: 100%;
-        height: 700px;
-        padding: 0px;
-        margin: 0px;
+        height: 90px;
+    }
+    .main-header h2{
+        font-weight: 600;
     }
     
- 
+    .sidebar-button{
+        cursor: pointer;
+        border: none;background: none;
+        color: white;
+        background-color:transparent;
+        position: fixed;
+        top: 17px;
+        left: 15px;
+        font-size: 27px;
+    }
+    .sidebar-button:hover{
+        color: rgb(204, 204, 204);
+    }
+    
+    .user_email_text{
+        color: white;
+        font-size: 17px;
+        padding: 0px 0px 10px 30px;
+    }
+    
+    .profile-pic{
+       border-radius: 0px;
+        height: 100px;
+        width: 100px;
+        cursor: pointer;
+        margin-top: 30px;margin-bottom: 10px;margin-left: 30px;
+    }
+    
+    .sidebar{
+        position: absolute;
+        top:0;
+        left:-280px;
+        display: block;
+        z-index: 2;
+        width: 280px;
+        height: 150%;
+        background-color: #2978b5;
+        transition: 0.4s;
+    }
+    
+    .sidebar-appear{
+        left:0;
+        position: fixed;
+        overflow-y: scroll;
+    }
+    
+    .background{
+        background-color: rgba(128, 128, 128, 0.671);
+        height: 100%;
+        width: 100%;
+    }
+    
+    .sidebar header{
+       background-color: #2978b5;
+       height: 180px
+    }
+    .sidebar ul{
+        list-style-type: none;
+        padding-left: 0px;
+    
+    }
+    .sidebar ul li{
+        width: 100%;
+        padding-top: 15px;padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-left: 20px;
+        transition: .4s;
+        box-sizing: border-box;
+    }
+    .sidebar ul li:hover{
+        padding-left: 27px;
+    }
+    .sidebar ul li a{
+        text-decoration: none;
+        color: whitesmoke;
+        font-size: 17px;
+        padding-left: 20px;
+    }
+    .cross{
+        float: right;
+        position: relative;
+        right: 30px;top:30px;
+        font-size: 30px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .sidebar-end{
+        padding-top: 20px;
+    }
+
+    .cross i{
+        font-size: 30px;
+        transition: 0.2s;
+    }
+    .cross i:hover{
+        font-size: 31px;
+    }
+    
+    .chart{
+        height: 100%;
+        width: 100%;
+        margin-top: 50px;
+    }
+    
+     .crart_box{
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            margin: 0px;
+        }
+    
+    
+    
+    .blur {
+              -webkit-filter: blur(5px);
+    }
   
 }
 

@@ -166,15 +166,36 @@
         margin: 40px 0px 40px 0px;
         display: none;
     }
+
+    .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: right;
+        cursor: pointer;
+    }
 </style>
 
 <body onload="formatPhone()">
 
     <input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
 
+    <!--HEADER START-->  
     <header class="main-header">
-        <h3><i class="fa fa-bug" aria-hidden="true"></i> Project Detail </h3>
+        <div class="row container-fluid">
+            <div class="col-md-6">
+                <h3><i class="fa fa-bug" aria-hidden="true"></i> Project Detail </h3>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/dashboard}" style="text-decoration: none;">
+                    <div class="dasshboard-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
     </header>
+    <!--HEADER END-->
 
 
     <div class="row container-fluid">

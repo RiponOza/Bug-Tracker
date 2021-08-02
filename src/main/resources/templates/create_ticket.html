@@ -60,12 +60,33 @@
     footer {
         height: 200px;
     }
+
+    .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: right;
+        cursor: pointer;
+    }
 </style>
 
 <body>
+    <!--HEADER START-->  
     <header class="main-header">
-        <h3><i class="fa fa-bug" aria-hidden="true"></i> BUG TRACKER </h3>
+        <div class="row container-fluid">
+            <div class="col-md-6">
+                <h3><i class="fa fa-bug" aria-hidden="true"></i> Create Ticket </h3>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/dashboard}" style="text-decoration: none;">
+                    <div class="dasshboard-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
     </header>
+    <!--HEADER END-->
 
     <div class="row container-fluid">
         <div class="col-md-3 col-sm-1"></div>

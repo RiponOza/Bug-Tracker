@@ -107,13 +107,54 @@
         transform:translate(-50%,-50%) scale(1);
       }
       /* POPUP END */
+
+      .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: right;
+        cursor: pointer;
+    }
+
+    /* SMARTPHONE VIEW */
+    @media screen and (max-width: 600px) {
+        .main-header {
+        background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        color: white;
+        font-size: 25px;
+        margin-bottom: 30px;
+        font-weight: 600;
+        width: 100%;
+        height: 110px;
+    }
+    
+        .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: left;
+        cursor: pointer;
+        padding: 10px 0px 10px 0px;
+    }
+    }
 </style>
 <body onload="formatPhone()">
     <!-- HEADER START-->
     <header class="main-header">
-        <div class="sidebar-button"><i class="fa fa-bars fa-lg"
-            aria-hidden="true"></i></div>
-        <h3><i class="fa fa-bug" aria-hidden="true"></i> USER PROFILE</h3>
+        <div class="row container-fluid">
+            <div class="col-md-6">
+                <h3><i class="fa fa-bug" aria-hidden="true"></i> User Profile </h3>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/dashboard}" style="text-decoration: none;">
+                    <div class="dasshboard-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
     </header>
     <!-- HEADER END-->
 
