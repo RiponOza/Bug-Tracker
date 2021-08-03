@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Detail</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
+        integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+
+<style type="text/css">
+    body {
+        background-color: white;
+    }
+
+    .btn {
+        border-radius: 0px;
+    }
+
+    .row {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .main-header {
+        background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        color: white;
+        font-size: 25px;
+        margin-bottom: 30px;
+        font-weight: 600;
+        width: 100%;
+        height: 90px;
+    }
+
+    .main-header h2 {
+        font-weight: 600;
+    }
+
+    footer {
+        padding: 50px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    #no-project h4 {
+        padding: 20px 0px 20px 0px;
+    }
+
+    #no-project .btn {
+        border-radius: 0px;
+    }
+
+    tr {
+        cursor: pointer;
+    }
+
+    .profile-pic {
+        height: 150px;
+        width: 150px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-pic:hover {
+        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    #ticket_not_assigned h4 {
+        padding: 40px 20px 40px 20px;
+    }
+
+    #ticket_not_assigned_ajax h4 {
+        padding: 40px 20px 40px 20px;
+    }
+
+    #btn-unassign {
+        margin-left: 45%;
+        border-radius: 0px;
+    }
+
+    thead h4 {
+        background-color: #764ba2;
+    }
+
+    #file-upload {
+        background-color: rgb(207, 207, 207);
+        padding: 20px 0px 20px 20px;
+    }
+
+    #file-upload h4 {
+        padding-bottom: 10px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    /* POPUP START */
+    .popup .overlay {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1;
+        display: none;
+    }
+
+    .popup .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: #fff;
+        width: 95%;
+        max-width: 700px;
+        height: 400px;
+        z-index: 2;
+        text-align: center;
+        box-sizing: border-box;
+        font-family: "Open Sans", sans-serif;
+        padding: 50px 20px 20px 20px;
+        overflow-y: scroll;
+    }
+
+    .popup .close-btn {
+        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        width: 30px;
+        height: 30px;
+        background: #222;
+        color: #fff;
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 50%;
+    }
+
+    .popup .form-group {
+        margin-top: 50px;
+    }
+
+    .content button {
+        margin-top: 20px;
+    }
+
+    .content input {
+        font-weight: 400;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .popup.active .overlay {
+        display: block;
+    }
+
+    .popup.active .content {
+        transition: all 300ms ease-in-out;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* POPUP END */
+
+    #delete-project {
+        margin: 40px 0px 40px 0px;
+    }
+
+    #delete-project-main {
+        margin: 40px 0px 40px 0px;
+        display: none;
+    }
+
+    .alert {
+        border-radius: 0px;
+    }
+
+    #assign-user-table thead .alert .alert-warning {
+        border-radius: 0px;
+    }
+
+    #change-status {
+        margin: 0px 0px 0px 10px;
+    }
+
+    #table-header-ticket{
+        background-image: linear-gradient(90deg, #32D02AFF 0%, #71C4FFFF 100%);        color: whitesmoke;
+        font-size: 30px;
+        padding: 20px 0px 20px 20px;
+        margin: 0px 0px 0px 0px;
+        font-weight: 300px;
+    }
+
+    #table-header-resource{
+        background-image: linear-gradient(90deg, #FF00C3FF 0%, #71C4FFFF 100%);
+        color: whitesmoke;
+        font-size: 30px;
+        padding: 20px 0px 20px 20px;
+        margin: 0px 0px 0px 0px;
+        font-weight: 300px;
+    }
+
+    table{
+        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    }
+
+
+    .dasshboard-link {
+        font-size: 20px;
+        color: white;
+        float: right;
+        cursor: pointer;
+    }
+</style>
+
+<body onload="formatPhone()">
+
+    <!--HEADER START-->
+    <header class="main-header">
+        <div class="row container-fluid">
+            <div class="col-md-6">
+                <h3><i class="fa fa-bug" aria-hidden="true"></i> Ticket Detail </h3>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/dashboard}" style="text-decoration: none;">
+                    <div class="dasshboard-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+    <!--HEADER END-->
+
+    <!-- POPUP (ASSIGN USER) -->
+    <div class="popup" id="popup">
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup()">×</div>
+            <!--STATUS START-->
+            <div id="popup-status" style="margin-top: 30px;"></div>
+            <!--STATUS END-->
+        </div>
+    </div>
+    </div>
+    <!-- POPUP END -->
+
+    <br>
+    <div class="row container-fluid">
+        <div class="col-md-1 col-sm-1"></div>
+        <div class="col-md-10 col-sm-10">
+            <!-- TICKET DETAIL START-->
+            <div id="table-header-ticket">
+                <i class="fa fa-ticket" aria-hidden="true"></i> Ticket Detail
+            </div>
+            <table class="table table-striped">
+                <thead>
+                   
+                </thead>
+                <tbody>
+                    <!--Hidden form field-->
+                    <input id="userId" type="hidden" th:value="${phone}">
+                    <input id="ticketId" type="hidden" th:value="${id}">
+                    <input id="host" type="hidden" th:value="${@environment.getProperty('host')}">
+                    <!--Hidden form field-->
+                    <tr>
+                        <th scope="row">Type</th>
+                        <td th:text="${type}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status</th>
+                        <td>
+                            <div class="row container-fluid">
+                                <div class="col-md-2">
+                                    <span th:text="${status}"></span>
+                                </div>
+                                <div class="col-md-10">
+                                    <div id="change-status" class="form-inline">
+                                        <form method="GET" th:action="@{/set-status}">
+                                            <input type="hidden" name="ticketId" th:value="${id}" >
+                                            <select class="form-control form-control-sm" name="status" id="status">
+                                                <option value="">Change Status</option>
+                                                <option value="Open">Open</option>
+                                                <option value="Working">Working</option>
+                                                <option value="Testing">Testing</option>
+                                                <div th:if="${tested==true}">
+                                                    <option value="Resolved">Resolved</option>
+                                                </div>
+                                            </select>
+                                            <button id="status-button" type="submit" class="btn btn-primary btn-sm" style="margin-left: 10px;" disabled>
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Change
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Priority</th>
+                        <td th:text="${priority}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Test Result</th>
+                        <td>
+                            <div th:if="${tested}" >
+                                <i style="color: green; font-size: 20px;" class="fa fa-thumbs-up" aria-hidden="true"></i> Tested Successfully
+                            </div>
+                            <div th:unless="${tested}">
+                                <i style="color:red; font-size: 20px" class="fa fa-exclamation-triangle" aria-hidden="true"></i> Not Tested
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Description</th>
+                        <td>
+                            <textarea class="form-control" rows="5" cols="50" th:text="${descr}" disabled></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Created Date</th>
+                        <td th:text="${createdDate}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Created Time</th>
+                        <td th:text="${createdTime}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Updated Date</th>
+                        <td th:text="${updatedDate}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Updated Time</th>
+                        <td th:text="${updatedTime}"></td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <!-- TICKET DETAIL END-->
+
+            <!-- PROJECTS DETAIL END-->
+
+        </div>
+        <div class="col-md-1 col-sm-1"></div>
+    </div>
+
+    <br><br>
+
+    <div class="row container-fluid">
+        <div class="col-md-1 col-sm-1"></div>
+            <div class="col-md-10 col-sm-10">
+                <!-- STATUS -->
+                <div id="status_success" th:if="${param.status_success}" style="padding-top: 50px;">
+                    <div class="alert alert-success">
+                        <h4><i class="fa fa-hand-peace-o" aria-hidden="true"></i> <span
+                                th:text="${param.status_success}"></span></h4>
+                    </div>
+                </div>
+                <div id="status_failure" th:if="${status_failure}" th:text="${status_failure}" class="alert alert-danger">
+                </div>
+                <!-- STATUS END-->
+                <div id="no-resources-available" class="alert alert-warning"
+                    th:classappend="${resourceCount==0} ? '' : 'hide'">
+                    <h4><i class="fa fa-file" aria-hidden="true"></i> No files available</h4>
+                </div>
+                <div id="resources-table" th:classappend="${resourceCount==0} ? 'hide' : ''">
+                    <div id="table-header-resource">
+                        <i class="fa fa-file" aria-hidden="true"></i> Files
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col"><i class="fa fa-list-ol" aria-hidden="true"></i> Sl No</th>
+                                <th scope="col"><i class="fa fa-info-circle" aria-hidden="true"></i> File Name</th>
+                                <th scope="col"><i class="fa fa-file" aria-hidden="true"></i> File Type</th>
+                                <th scope="col"><i class="fa fa-calendar" aria-hidden="true"></i> Created Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${resources}" th:each="resource,p : ${resources}">
+                                <th scope="row" th:text="${p.index+1}"></th>
+                                <td th:text="${resource.resourceName}"></td>
+                                <td th:text="${resource.resourceType}"></td>
+                                <td th:text="${resource.created}"></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a th:href="@{/show-resource(id=${ticketId}, name=${resource.resourceName})}"
+                                            target="_blank">
+                                            <button class="btn btn-warning text-black"><i class="fa fa-search-plus"
+                                                    aria-hidden="true"></i></button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-1"></div>
+    </div>
+    <footer>
+
+    </footer>
+
+</body>
+<script>
+    $(document).ready(
+        setTimeout(() => {
+            $('#status_success').hide()
+            $('#status_failure').hide()
+        }, 5000)
+    );
+
+    // show change status
+    $('#change-status-show').click(() => {
+        $('#change-status-show').hide();
+        $('#change-status').removeAttr('hidden');
+    });
+
+    // take screen to status
+    $(document).ready(function () {
+        $('html, body').animate({
+            scrollTop: $('#status_success').offset().top
+        }, 'slow');
+    });
+
+
+    let formatPhone = () => {
+        let phone = $("#phone").text();
+        phone = '+' + phone.substr(0, 2) + '-' + phone.substr(2);
+        $("#phone").text(phone);
+    }
+
+
+    $("#status").on('change', ()=>{
+        let status = $("#status").val();
+        if(status.length > 0){
+            $("#status-button").removeAttr('disabled');
+        }else{
+            $("#status-button").attr('disabled', 'true');
+        }
+    });
+
+    // POPUP FUNCTION
+    let togglePopup = () => {
+        $('#alert-box').hide();
+        document.getElementById("popup").classList.toggle("active");
+    }
+
+</script>
+
+</html>

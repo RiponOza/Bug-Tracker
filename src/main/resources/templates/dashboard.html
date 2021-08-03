@@ -67,11 +67,11 @@
       </li>
 
       <li th:if="${role}==developer OR ${role}==tester">
-        <a th:href="@{#}"><i class="fa fa-ticket" aria-hidden="true"></i> My Tickets</a>
+        <a th:href="@{/show-tickets-user}"><i class="fa fa-ticket" aria-hidden="true"></i> My Tickets</a>
       </li>
 
       <li th:if="${role}==developer OR ${role}==tester">
-        <a th:href="@{#}"><i class="fa fa-bar-chart" aria-hidden="true"></i> My Project</a>
+        <a th:href="@{/get-project-user}"><i class="fa fa-bar-chart" aria-hidden="true"></i> My Project</a>
       </li>
 
       <li>

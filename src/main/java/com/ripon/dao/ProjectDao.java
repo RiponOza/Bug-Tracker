@@ -114,17 +114,38 @@ public class ProjectDao {
 		}
 	}
 	
-	
+	// get the assigned project of a user(dev/tester)
 	public Project getProjectOfUser(String userId) {
-		String query = "SELECT project_id from Project_User where user_id=?;"; 
+		String query = "SELECT id, title, descr, date_format(date(created), '%d-%M-%Y') as created_date, time_format(time(created), '%h:%i %p') as created_time, datediff(current_date(), date(created)) as days_passed, manager_id, admin_id FROM Project WHERE id IN (SELECT project_id FROM Project_User WHERE user_id=?);";
 		try {
-			String projectId = jt.queryForObject(query, String.class, userId);
-			Project project = getProject(projectId);
+			Map<String, Object> map = jt.queryForMap(query, userId);
+			Project project = new Project();
+			project.setId(map.get("id").toString());
+			project.setCreatedDate(map.get("created_date").toString());
+			project.setCreatedTime(map.get("created_time").toString());
+			project.setTitle(map.get("title").toString());
+			project.setDesc(map.get("descr").toString());
+			project.setDaysPassed(Long.parseLong(map.get("days_passed").toString()));
+			if(map.get("manager_id")!=null) {
+				project.setManagerId(map.get("manager_id").toString());
+			}
 			return project;
-		}catch(Exception e) {
+		}catch(DataAccessException e) {
 			return null;
 		}
 	}
+	
+	
+//	public Project getProjectOfUser(String userId) {
+//		String query = "SELECT project_id from Project_User where user_id=?;"; 
+//		try {
+//			String projectId = jt.queryForObject(query, String.class, userId);
+//			Project project = getProject(projectId);
+//			return project;
+//		}catch(Exception e) {
+//			return null;
+//		}
+//	}
 
 	
 	

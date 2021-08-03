@@ -100,6 +100,11 @@ public class TicketService {
 
 	}
 	
+	
+	public boolean setTicketStatus(String ticketId, String newStatus) {
+		return ticketDao.setTicketStatus(ticketId, newStatus);
+	}
+	
 	// delete tickets of a project
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public boolean deleteTicketsOfProject(String projectId) {

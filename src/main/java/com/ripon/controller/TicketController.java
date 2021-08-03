@@ -156,6 +156,62 @@ public class TicketController {
 	
 	
 	
+	// get ticket details of user
+	@GetMapping("/ticket-detail-user/{ticketId}")
+	public String getTicketDetailOfUser(@PathVariable("ticketId") String ticketId, HttpSession session, Model model) {
+		if(session.getAttribute("userid")==null) {
+			return "redirect:/login";
+		}
+		
+		Ticket ticket = ticketService.getTicket(ticketId);
+		// ticket info
+		model.addAttribute("id", ticket.getId());
+		model.addAttribute("title", ticket.getTitle());
+		model.addAttribute("descr", ticket.getDescr());
+		model.addAttribute("createdDate", ticket.getCreatedDate());
+		model.addAttribute("createdTime", ticket.getCreatedTime());
+		model.addAttribute("updatedDate", ticket.getLastUpdatedDate());
+		model.addAttribute("updatedTime", ticket.getLastUpdatedTime());
+		model.addAttribute("type", ticket.getType());
+		model.addAttribute("status", ticket.getStatus());
+		model.addAttribute("priority", ticket.getPriority());
+		model.addAttribute("id", ticket.getId());
+
+		model.addAttribute("tested", false);
+		
+		// get all the resources of ticket
+		List<TicketResource> resources = ticketResourceService.getTicketResources(ticketId);
+		model.addAttribute("resources", resources);
+		model.addAttribute("resourceCount", resources.size());
+		return "ticket_detail_user";
+	}
+	
+	
+	// shows tickets assigned to a user
+	@GetMapping("/show-tickets-user")
+	public String getTicketsOfUser(HttpSession session, Model model){
+		String userId = session.getAttribute("userid").toString();
+		List<Ticket> ticketList = ticketService.getTicketsOfUser(userId);
+		model.addAttribute("ticketList", ticketList);
+		model.addAttribute("ticketCount", ticketList.size());
+		return "show_tickets_user";
+	}
+	
+	
+	
+	@GetMapping("/set-status")
+	public String setStatus( @RequestParam("ticketId") String ticketId, @RequestParam("status") String status) {
+		if(status.length()==0) {
+			return "redirect:/ticket-detail-user/"+ticketId;
+		}
+		ticketService.setTicketStatus(ticketId, status);
+		System.out.println(ticketId + "  " + status);
+		return "redirect:/ticket-detail-user/"+ticketId;
+	}
+	
+	
+	
+	
 	@GetMapping("/show-tickets")
 	public String getProjectManagerTickets(Model model, HttpSession session) {
 		if(session.getAttribute("userid")==null) {
@@ -177,6 +233,8 @@ public class TicketController {
 		return "show_tickets";
 	}
 
+	
+	
 	// assign ticket to a user
 	@GetMapping("/assign-ticket-to-user")
 	public String assignTicketToUser(@RequestParam("userId") String userId, @RequestParam("ticketId") String ticketId) {
@@ -191,6 +249,8 @@ public class TicketController {
 	public Boolean unassignTicketOfUser(@RequestParam("ticketId") String ticketId) {
 		return ticketService.unassignTicketOfUser(ticketId);
 	}
+	
+	
 	
 	@CrossOrigin
 	@PostMapping("/delete-ticket")

@@ -86,22 +86,29 @@ public class ProjectController {
 	}
 	
 	
-	
-	@GetMapping("/get-project-user/{userId}")
-	public String getProjectofUser(@PathVariable("userId") String userId, Model model, HttpSession session) {
-		User user = userService.getUser(session.getAttribute("userid").toString());
-		if(user == null) {
-			return "redirect:/login";
-		}
-		if(!user.getRole().equals("DV") && !user.getRole().equals("TS")) {
-			return "redirect:/login";
-		}
+	@GetMapping("/get-project-user")
+	public String getProjectofUser(Model model, HttpSession session) {
+		String userId = session.getAttribute("userid").toString();
 		Project project = projectService.getProjectOfUser(userId);
-		if(project==null) {
-			model.addAttribute("projectCount", 0);
-			return "";
+		model.addAttribute("title", project.getTitle());
+		model.addAttribute("desc", project.getDesc());
+		model.addAttribute("createdDate", project.getCreatedDate());
+		model.addAttribute("createdTime", project.getCreatedTime());
+		model.addAttribute("daysPassed", project.getDaysPassed());
+		model.addAttribute("desc", project.getDesc());
+		model.addAttribute("projectId", project.getId());
+		String managerId = project.getManagerId();
+		if(managerId == null) {
+			model.addAttribute("projectManager", null);
+		}else {
+			User projectManager = userService.getUser(managerId);
+			model.addAttribute("managerId", projectManager.getPhone());
+			model.addAttribute("projectManager", projectManager.getFname() + " " + projectManager.getLname());
+			model.addAttribute("email", projectManager.getEmail());
+			model.addAttribute("phone", projectManager.getPhone());
+			model.addAttribute("image", "/profile-image/" + projectManager.getImage());
 		}
-		return "";
+		return "project_detail_user";
 	}
 	
 	

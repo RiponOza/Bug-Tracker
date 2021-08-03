@@ -140,6 +140,16 @@ public class TicketDao {
 	}
 	
 	
+	public boolean setTicketStatus(String ticketId, String newStatus) {
+		try {
+			String sql = "UPDATE Ticket SET status = ? WHERE id = ?";
+			return jt.update(sql, newStatus, ticketId)==1?true:false;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	
 
 	public boolean deleteTicket(String ticketId) {

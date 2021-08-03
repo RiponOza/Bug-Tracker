@@ -33,12 +33,17 @@ public class Ticket {
 	private String lastUpdatedTime;
 	
 	public static final Map<Integer, String> PRIORITY = new HashMap<Integer, String>();
-	
+	public static final Map<String, Integer> PRIORITY_NUM = new HashMap<String, Integer>();
 	public Ticket() {
 		PRIORITY.put(0, "None");
 		PRIORITY.put(1, "Low");
 		PRIORITY.put(2, "Medium");
 		PRIORITY.put(3, "High");
+		
+		PRIORITY_NUM.put("None", 0);
+		PRIORITY_NUM.put("Low", 1);
+		PRIORITY_NUM.put("Medium", 2);
+		PRIORITY_NUM.put("High", 3);
 	}
 	
 	public Long getId() {

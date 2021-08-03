@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>My Tickets</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js" integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+
+<style type="text/css">
+    body{
+    background-color:white;
+    }
+    .main-header {
+        background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        color: white;
+        font-size: 25px;
+        margin-bottom: 30px;
+        font-weight: 600;
+        width: 100%;
+        height: 90px;
+    }
+    .main-header h2{
+        font-weight: 600;
+    }
+
+    .form-header{
+        padding: 20px 0px 20px 0px;
+    }
+
+    form{
+        margin: 50px 0px 0px 0px;
+    }
+
+    form .btn{
+        border-radius: 0px;
+        margin-top: 20px;
+    }
+
+    footer{
+        height: 200px;
+    }
+    a{
+        text-decoration: none;
+    }
+    #no-project h4{
+        padding: 20px 0px 20px 0px;
+    }
+    #no-project .btn{
+    	border-radius: 0px;
+    }
+    tr{
+        cursor: pointer;
+    }
+
+    .dasshboard-link{
+        font-size: 20px;
+        color: white;
+        float: right;
+        cursor: pointer;
+    }
+</style>
+
+<body> 
+
+    <!--HEADER START-->  
+    <header class="main-header">
+        <div class="row container-fluid">
+            <div class="col-md-6">
+                <h3><i class="fa fa-bug" aria-hidden="true"></i> My Tickets </h3>
+            </div>
+            <div class="col-md-6">
+                <a th:href="@{/dashboard}" style="text-decoration: none;">
+                    <div class="dasshboard-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+    <!--HEADER END-->
+
+   <div class="row container-fluid">
+       <div class="col-md-1 col-sm-1"></div>
+       <div class="col-md-10 col-sm-10">
+        <!-- STATUS -->
+        <div id="status_success" th:if="${status_success}" th:text="${status_success}" class="alert alert-success"></div>
+	    <div id="status_failure" th:if="${status_failure}" th:text="${status_failure}" class="alert alert-danger"></div>
+        <!-- STATUS END-->
+        <!-- PROJECTS TABLE --> 
+        <div class="table table-responsive">
+            <table class="table table-striped" th:if="${ticketCount}>=1">
+                <thead>
+                  <tr>
+                    <th scope="col">SL No</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">Created Date</th>
+                    <th scope="col">Created Time</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="ticket,p : ${ticketList}">
+                    <th scope="row" th:text="${p.index+1}"></th>
+                    <td th:text="${ticket.type}"></td>
+                    <td th:text="${ticket.title}"></td>
+                    <td th:text="${ticket.status}"></td>
+                    <td th:text="${ticket.priority}"></td>
+                    <td th:text="${ticket.createdDate}"></td>
+                    <td th:text="${ticket.createdTime}"></td>
+                    <td>
+                        <a th:href="@{/ticket-detail-user/__${ticket.id}__}">
+                            <button class="btn btn-sm btn-success"><i class="fa fa-info-circle" aria-hidden="true"></i> Detail</button>
+                        </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+            <!-- PROJECTS TABLE END-->
+            <!-- NO TICKET MESSAGE -->
+              <div id="no-project" th:if="${ticketCount==0}" class="text-center">
+                    <h4 class="alert alert-warning"><i class="fa fa-meh-o" aria-hidden="true"></i> Oops, You don't have any Ticket !</h4>
+              </div>
+            <!-- NO TICKET MESSAGE END-->
+       </div>
+       <div class="col-md-1 col-sm-1"></div>
+   </div>
+   
+   <footer>
+       
+   </footer>
+
+
+   <script th:inline="javascript">
+       $(document).ready(
+		setTimeout(()=>{
+			$('#status_success').hide()
+			$('#status_failure').hide()
+		}, 4000)
+	);
+
+       
+   </script>
+</html>
